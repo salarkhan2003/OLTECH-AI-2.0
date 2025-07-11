@@ -32,10 +32,10 @@ export default function AIPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const chatRef = useRef<HTMLDivElement>(null);
-  const [documents, setDocuments] = useState<any[]>([]);
+  const [documents, setDocuments] = useState<unknown[]>([]);
   const [selectedDoc, setSelectedDoc] = useState<string>("");
   const [docText, setDocText] = useState<string>("");
-  const [notifications, setNotifications] = useState<any[]>([]);
+  const [notifications, setNotifications] = useState<unknown[]>([]);
   const [includeContext, setIncludeContext] = useState(true);
   const { theme } = useTheme();
 
@@ -51,10 +51,10 @@ export default function AIPage() {
   useEffect(() => {
     async function fetchDocText() {
       if (!selectedDoc) { setDocText(""); return; }
-      const doc = documents.find((d: any) => d.id === selectedDoc);
+      const doc = documents.find((d: unknown) => (d as any).id === selectedDoc);
       if (!doc) { setDocText(""); return; }
       // Try to fetch text content (assume .txt or .md for demo)
-      const { data, error } = await supabase.storage.from('documents').download(doc.file_url);
+      const { data, error } = await supabase.storage.from('documents').download((doc as any).file_url);
       if (error) { setDocText("[Could not load document text]"); return; }
       const text = await data.text();
       setDocText(text.slice(0, 4000)); // Limit for Gemini context
@@ -76,13 +76,13 @@ export default function AIPage() {
   // Build workspace context string
   const workspaceContext = notifications.length > 0
     ? notifications.slice(0, 10).map(n => {
-        if (n.type === "task_assigned") return `Task assigned: ${n.data?.title}`;
-        if (n.type === "team_member_added") return `New teammate: ${n.data?.name}`;
-        if (n.type === "team_member_removed") return `Teammate removed: ${n.data?.name}`;
-        if (n.type === "team_member_updated") return `Teammate updated: ${n.data?.name}`;
-        if (n.type === "project_assigned") return `Project assigned: ${n.data?.name}`;
-        if (n.type === "document_tagged") return `Tagged in document: ${n.data?.title}`;
-        return n.data?.message || n.type;
+        if ((n as any).type === "task_assigned") return `Task assigned: ${(n as any).data?.title}`;
+        if ((n as any).type === "team_member_added") return `New teammate: ${(n as any).data?.name}`;
+        if ((n as any).type === "team_member_removed") return `Teammate removed: ${(n as any).data?.name}`;
+        if ((n as any).type === "team_member_updated") return `Teammate updated: ${(n as any).data?.name}`;
+        if ((n as any).type === "project_assigned") return `Project assigned: ${(n as any).data?.name}`;
+        if ((n as any).type === "document_tagged") return `Tagged in document: ${(n as any).data?.title}`;
+        return (n as any).data?.message || (n as any).type;
       }).join("\n")
     : "";
 
@@ -112,9 +112,9 @@ export default function AIPage() {
 
   // Suggested prompts based on notifications
   const dynamicSuggestions = [
-    ...(notifications.some(n => n.type === "task_assigned") ? ["Summarize my new tasks"] : []),
-    ...(notifications.some(n => n.type === "project_assigned") ? ["What are my current projects?"] : []),
-    ...(notifications.some(n => n.type === "document_tagged") ? ["What documents was I tagged in?"] : []),
+    ...(notifications.some((n: unknown) => (n as any).type === "task_assigned") ? ["Summarize my new tasks"] : []),
+    ...(notifications.some((n: unknown) => (n as any).type === "project_assigned") ? ["What are my current projects?"] : []),
+    ...(notifications.some((n: unknown) => (n as any).type === "document_tagged") ? ["What documents was I tagged in?"] : []),
     "What should I focus on today?",
     ...SUGGESTED,
   ];
@@ -132,7 +132,7 @@ export default function AIPage() {
               <label htmlFor="doc-select" className="text-sm font-medium">Document Context:</label>
               <select id="doc-select" title="Document Context" className="border rounded p-2 bg-background text-foreground dark:bg-background dark:text-foreground" value={selectedDoc} onChange={e => setSelectedDoc(e.target.value)}>
                 <option value="">None</option>
-                {documents.map((d: any) => <option key={d.id} value={d.id}>{d.name}</option>)}
+                {documents.map((d: unknown) => <option key={(d as any).id} value={(d as any).id}>{(d as any).name}</option>)}
               </select>
               {docText && <span className="text-xs text-gray-500">{docText.length} chars</span>}
               <label className="ml-auto flex items-center gap-2 cursor-pointer select-none">

@@ -205,7 +205,7 @@ export default function CalendarPage() {
                     {dayMeetings.length > 0 && <span className="w-2 h-2 rounded-full bg-gradient-to-r from-blue-400 to-green-400 shadow-md" title="Meeting"></span>}
                     {dayTasks.length > 0 && <span className="w-2 h-2 rounded-full bg-gradient-to-r from-yellow-400 to-orange-400 shadow-md" title="Task Deadline"></span>}
                   </div>
-                </div>
+                    </div>
                   );
                 })}
               </div>
@@ -233,12 +233,12 @@ export default function CalendarPage() {
                     <div className="font-semibold">📝 {t.title}</div>
                     <div className="text-sm">Deadline: {new Date(t.due_date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</div>
                     {t.project_id && <div className="text-xs">Project: {t.project_id}</div>}
-                  </div>
+              </div>
                 ))}
               </>
             )}
-          </div>
-        )}
+            </div>
+          )}
       {/* Meeting creation modal */}
       {showMeetingModal && (
             <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">

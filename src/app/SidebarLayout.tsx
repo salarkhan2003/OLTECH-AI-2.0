@@ -1,9 +1,8 @@
 "use client";
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import NotificationBell from "./NotificationBell";
 import { useState, useEffect, useRef } from "react";
-import { Menu, ChevronLeft, UserCircle2, LogOut, Settings, User, BarChart3, CheckCircle2, FolderKanban, Users, FileText, Calendar, Sparkles, PieChart, MessageCircle } from "lucide-react";
+import { UserCircle2, LogOut, Settings, User, BarChart3, CheckCircle2, FolderKanban, Users, FileText, Calendar, Sparkles, PieChart, MessageCircle } from "lucide-react";
 import { useUser } from "@/context/UserContext";
 import { getAuth, signOut as fbSignOut } from "firebase/auth";
 import { supabase } from "@/lib/supabase";
@@ -17,11 +16,6 @@ export default function SidebarLayout({ children }: { children: React.ReactNode 
   const [menuOpen, setMenuOpen] = useState(false);
   const router = useRouter();
   const menuRef = useRef<HTMLDivElement>(null);
-  const handleLogout = async () => {
-    await fbSignOut(getAuth());
-    await supabase.auth.signOut();
-    router.push("/login");
-  };
 
   // Close dropdown on click outside
   useEffect(() => {
