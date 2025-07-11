@@ -275,7 +275,10 @@ export default function DocumentsPage() {
   // Filtered files
   const filtered = files.filter(f =>
     (!category || (f as unknown as { category: string }).category === category) &&
-    (!search || (f as unknown as { name: string }).name.toLowerCase().includes(search.toLowerCase()) || ((f as unknown as { description: string }).description || '').toLowerCase().includes(search.toLowerCase())))
+    (!search ||
+      (f as unknown as { name: string }).name.toLowerCase().includes(search.toLowerCase()) ||
+      ((f as unknown as { description: string }).description || '').toLowerCase().includes(search.toLowerCase())
+    )
   );
 
   return (
