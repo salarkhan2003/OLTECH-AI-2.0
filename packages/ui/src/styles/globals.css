@@ -1,0 +1,123 @@
+/* Modern 3D Bold Global Styles for OLTECH AI */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap');
+
+:root {
+  --font-main: 'Inter', 'Geist', 'Poppins', Arial, sans-serif;
+  --color-bg: #0f172a;
+  --color-bg-gradient: linear-gradient(135deg, #0ea5e9 0%, #22d3ee 50%, #22c55e 100%);
+  --color-card: #181f2e;
+  --color-card-gradient: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+  --color-primary: #0ea5e9;
+  --color-accent: #f472b6;
+  --color-success: #22c55e;
+  --color-warning: #fbbf24;
+  --color-danger: #ef4444;
+  --color-text: #fff;
+  --color-text-muted: #cbd5e1;
+  --color-shadow: 0 4px 24px 0 rgba(34, 211, 238, 0.15), 0 1.5px 6px 0 rgba(14, 165, 233, 0.10);
+}
+
+html, body {
+  font-family: var(--font-main);
+  background: var(--color-bg-gradient);
+  color: var(--color-text);
+  min-height: 100vh;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 900;
+  text-shadow: 2px 4px 16px #0ea5e9, 0 2px 8px #22d3ee;
+  letter-spacing: 0.02em;
+  margin-bottom: 0.5em;
+}
+
+.main-title, .text-3xl, .font-bold {
+  font-weight: 900 !important;
+  text-shadow: 2px 4px 16px #0ea5e9, 0 2px 8px #22d3ee;
+}
+
+.card, .bg-card {
+  background: var(--color-card-gradient);
+  border-radius: 1.25rem;
+  box-shadow: var(--color-shadow);
+  padding: 2rem;
+  color: var(--color-text);
+}
+
+button, .btn, .Button {
+  font-weight: 900;
+  border-radius: 0.75rem;
+  background: linear-gradient(90deg, #0ea5e9 0%, #22d3ee 50%, #22c55e 100%);
+  color: #fff;
+  box-shadow: 0 4px 24px 0 rgba(34, 211, 238, 0.15), 0 1.5px 6px 0 rgba(14, 165, 233, 0.10);
+  border: none;
+  padding: 0.75rem 1.5rem;
+  transition: transform 0.1s, box-shadow 0.1s, background 0.2s;
+}
+button:hover, .btn:hover, .Button:hover {
+  transform: scale(1.04) translateY(-2px);
+  background: linear-gradient(90deg, #22d3ee 0%, #0ea5e9 100%);
+  box-shadow: 0 8px 32px 0 rgba(34, 211, 238, 0.25);
+}
+
+input, textarea, select {
+  font-weight: 700;
+  border-radius: 0.5rem;
+  border: 2px solid #22d3ee;
+  background: #181f2e;
+  color: #fff;
+  padding: 0.75rem 1rem;
+  box-shadow: 0 2px 8px 0 rgba(14, 165, 233, 0.10);
+  transition: border 0.2s, box-shadow 0.2s;
+}
+input:focus, textarea:focus, select:focus {
+  border: 2px solid #0ea5e9;
+  box-shadow: 0 0 0 2px #22d3ee;
+  outline: none;
+}
+
+.modal, .bg-card {
+  box-shadow: 0 8px 32px 0 rgba(34, 211, 238, 0.25), 0 2px 8px 0 rgba(14, 165, 233, 0.10);
+  border-radius: 1.5rem;
+  background: var(--color-card-gradient);
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  background: #181f2e;
+}
+::-webkit-scrollbar-thumb {
+  background: #22d3ee;
+  border-radius: 8px;
+}
+
+/* Vibrant badges, avatars, and status */
+.badge {
+  font-weight: 900;
+  border-radius: 0.75rem;
+  padding: 0.25em 1em;
+  background: linear-gradient(90deg, #f472b6 0%, #0ea5e9 100%);
+  color: #fff;
+  box-shadow: 0 2px 8px 0 rgba(244, 114, 182, 0.15);
+}
+.avatar {
+  border-radius: 50%;
+  box-shadow: 0 2px 8px 0 rgba(14, 165, 233, 0.10);
+  border: 3px solid #22d3ee;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .card, .bg-card {
+    padding: 1rem;
+  }
+  button, .btn, .Button {
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+  }
+  h1, .main-title {
+    font-size: 2rem;
+  }
+} 
