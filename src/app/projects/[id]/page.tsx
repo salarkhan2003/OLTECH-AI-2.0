@@ -49,11 +49,11 @@ export default function ProjectDetailsPage() {
     setActionError("");
     try {
       const { error } = await supabase.from("projects").update({
-        name: (editData as any).name,
-        description: (editData as any).description,
-        due_date: (editData as any).due_date,
-        priority: (editData as any).priority,
-        assigned_members: (editData as any).assigned_members,
+        name: (editData as Project).name,
+        description: (editData as Project).description,
+        due_date: (editData as Project).due_date,
+        priority: (editData as Project).priority,
+        assigned_members: (editData as Project).assigned_members,
       }).eq("id", projectId);
       if (error) throw error;
       setEditMode(false);
@@ -87,10 +87,10 @@ export default function ProjectDetailsPage() {
         {editMode ? (
           <div className="bg-white rounded shadow p-6 flex flex-col gap-4">
             <h2 className="text-xl font-bold mb-2">Edit Project</h2>
-            <input className="border rounded p-2" value={(editData as any).name} onChange={e => setEditData(d => ({ ...d, name: e.target.value }))} title="Project Name" placeholder="Project Name" />
-            <textarea className="border rounded p-2" value={(editData as any).description} onChange={e => setEditData(d => ({ ...d, description: e.target.value }))} title="Description" placeholder="Description" />
-            <input className="border rounded p-2" type="date" value={(editData as any).due_date || ""} onChange={e => setEditData(d => ({ ...d, due_date: e.target.value }))} title="Deadline" placeholder="Deadline" />
-            <select className="border rounded p-2" value={(editData as any).priority || "medium"} onChange={e => setEditData(d => ({ ...d, priority: e.target.value }))} title="Priority Level">
+            <input className="border rounded p-2" value={(editData as Project).name} onChange={e => setEditData(d => ({ ...d, name: e.target.value }))} title="Project Name" placeholder="Project Name" />
+            <textarea className="border rounded p-2" value={(editData as Project).description} onChange={e => setEditData(d => ({ ...d, description: e.target.value }))} title="Description" placeholder="Description" />
+            <input className="border rounded p-2" type="date" value={(editData as Project).due_date || ""} onChange={e => setEditData(d => ({ ...d, due_date: e.target.value }))} title="Deadline" placeholder="Deadline" />
+            <select className="border rounded p-2" value={(editData as Project).priority || "medium"} onChange={e => setEditData(d => ({ ...d, priority: e.target.value }))} title="Priority Level">
               <option value="low">Low</option>
               <option value="medium">Medium</option>
               <option value="high">High</option>
@@ -106,12 +106,12 @@ export default function ProjectDetailsPage() {
           </div>
         ) : project ? (
           <div className="bg-white rounded shadow p-6 flex flex-col gap-4">
-            <h2 className="text-2xl font-bold mb-2">{(project as any).name}</h2>
-            <div className="text-gray-600">{(project as any).description}</div>
-            <div className="text-sm">Priority: {(project as any).priority}</div>
-            <div className="text-sm">Due: {(project as any).due_date}</div>
+            <h2 className="text-2xl font-bold mb-2">{(project as Project).name}</h2>
+            <div className="text-gray-600">{(project as Project).description}</div>
+            <div className="text-sm">Priority: {(project as Project).priority}</div>
+            <div className="text-sm">Due: {(project as Project).due_date}</div>
             <div className="flex gap-2 mt-4">
-              {(profile?.id === (project as any).created_by || profile?.role === "admin") && (
+              {(profile?.id === (project as Project).created_by || profile?.role === "admin") && (
                 <>
                   <Button onClick={startEdit}>Edit</Button>
                   <Button variant="destructive" onClick={() => setDeleteConfirm(true)}>Delete</Button>

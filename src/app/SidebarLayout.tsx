@@ -4,17 +4,14 @@ import { usePathname } from 'next/navigation';
 import { useState, useEffect, useRef } from "react";
 import { UserCircle2, LogOut, Settings, User, BarChart3, CheckCircle2, FolderKanban, Users, FileText, Calendar, Sparkles, PieChart, MessageCircle } from "lucide-react";
 import { useUser } from "@/context/UserContext";
-import { getAuth, signOut as fbSignOut } from "firebase/auth";
-import { supabase } from "@/lib/supabase";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 
 export default function SidebarLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const isAuthPage = pathname === '/login' || pathname === '/signup';
-  const [sidebarOpen, setSidebarOpen] = useState(true);
-  const { profile, signOut } = useUser();
   const [menuOpen, setMenuOpen] = useState(false);
+  const { profile, signOut } = useUser();
   const router = useRouter();
   const menuRef = useRef<HTMLDivElement>(null);
 
@@ -35,25 +32,23 @@ export default function SidebarLayout({ children }: { children: React.ReactNode 
   ) : (
     <div className="min-h-screen flex flex-row">
       {/* Sidebar */}
-      {sidebarOpen && (
-        <aside className="w-56 min-h-screen bg-gradient-to-b from-blue-700 via-green-500 to-yellow-400 dark:from-blue-900 dark:via-green-900 dark:to-yellow-900 text-white flex flex-col p-4 gap-2 shadow-2xl rounded-tr-3xl rounded-br-3xl border-r-4 border-blue-300/40 z-10 transition-all duration-200 font-sans">
-          <nav className="flex flex-col gap-2 mt-4">
-            <SidebarLink href="/dashboard" icon="BarChart3" label="Dashboard" />
-            <SidebarLink href="/tasks" icon="CheckCircle2" label="Tasks" />
-            <SidebarLink href="/projects" icon="FolderKanban" label="Projects" />
-            <SidebarLink href="/team" icon="Users" label="Team" />
-            <SidebarLink href="/documents" icon="FileText" label="Documents" />
-            <SidebarLink href="/calendar" icon="Calendar" label="Calendar" />
-            <SidebarLink href="/ai" icon="Sparkles" label="AI Assistant" />
-            <SidebarLink href="/settings" icon="Settings" label="Settings" />
-          </nav>
-          <div className="flex-1" />
-          <div className="mt-8 flex flex-col gap-2 text-xs text-blue-100/80 font-semibold">
-            <span className="opacity-70">OLTECH AI Platform</span>
-            <span className="opacity-50">© {new Date().getFullYear()}</span>
-          </div>
-        </aside>
-      )}
+      <aside className="w-56 min-h-screen bg-gradient-to-b from-blue-700 via-green-500 to-yellow-400 dark:from-blue-900 dark:via-green-900 dark:to-yellow-900 text-white flex flex-col p-4 gap-2 shadow-2xl rounded-tr-3xl rounded-br-3xl border-r-4 border-blue-300/40 z-10 transition-all duration-200 font-sans">
+        <nav className="flex flex-col gap-2 mt-4">
+          <SidebarLink href="/dashboard" icon="BarChart3" label="Dashboard" />
+          <SidebarLink href="/tasks" icon="CheckCircle2" label="Tasks" />
+          <SidebarLink href="/projects" icon="FolderKanban" label="Projects" />
+          <SidebarLink href="/team" icon="Users" label="Team" />
+          <SidebarLink href="/documents" icon="FileText" label="Documents" />
+          <SidebarLink href="/calendar" icon="Calendar" label="Calendar" />
+          <SidebarLink href="/ai" icon="Sparkles" label="AI Assistant" />
+          <SidebarLink href="/settings" icon="Settings" label="Settings" />
+        </nav>
+        <div className="flex-1" />
+        <div className="mt-8 flex flex-col gap-2 text-xs text-blue-100/80 font-semibold">
+          <span className="opacity-70">OLTECH AI Platform</span>
+          <span className="opacity-50">© {new Date().getFullYear()}</span>
+        </div>
+      </aside>
       {/* Main content */}
       <div className="flex-1 flex flex-col min-h-screen">
         {/* Header with profile menu */}

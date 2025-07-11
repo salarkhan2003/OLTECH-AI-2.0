@@ -14,7 +14,7 @@ import { BackButton } from "@/components/ui/button";
 
 export default function ProjectsPage() {
   const { profile } = useUser();
-  const [projects, setProjects] = useState<any[]>([]);
+  const [projects, setProjects] = useState<unknown[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [showCreate, setShowCreate] = useState(false);
@@ -22,16 +22,16 @@ export default function ProjectsPage() {
   const [creating, setCreating] = useState(false);
   const [priority, setPriority] = useState("medium");
   const [deadline, setDeadline] = useState("");
-  const [members, setMembers] = useState<any[]>([]);
+  const [members, setMembers] = useState<unknown[]>([]);
   const [assignedMembers, setAssignedMembers] = useState<string[]>([]);
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("");
   const [showEdit, setShowEdit] = useState(false);
-  const [editProject, setEditProject] = useState<any>(null);
+  const [editProject, setEditProject] = useState<unknown>(null);
   const [showDelete, setShowDelete] = useState(false);
-  const [deleteProject, setDeleteProject] = useState<any>(null);
+  const [deleteProject, setDeleteProject] = useState<unknown>(null);
   const [showDetails, setShowDetails] = useState(false);
-  const [detailsProject, setDetailsProject] = useState<any>(null);
+  const [detailsProject, setDetailsProject] = useState<unknown>(null);
   const [menuOpenId, setMenuOpenId] = useState<string | null>(null);
   const menuRef = useRef<HTMLDivElement | null>(null);
 
@@ -137,33 +137,33 @@ export default function ProjectsPage() {
             <div className="text-red-600">{error}</div>
           ) : (
             <>
-              {projects.filter(p => (!search || p.name.toLowerCase().includes(search.toLowerCase())) && (!statusFilter || p.status === statusFilter)).length === 0 ? (
+              {projects.filter(p => (!search || (p as any).name.toLowerCase().includes((search as string).toLowerCase())) && (!statusFilter || (p as any).status === statusFilter)).length === 0 ? (
                 <div className="flex flex-col items-center justify-center py-16 text-gray-500">
                   <div className="text-2xl font-bold mb-2">No projects found</div>
                   <div className="mb-4">Create your first project to get started</div>
                 </div>
               ) : (
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
-                  {projects.filter(p => (!search || p.name.toLowerCase().includes(search.toLowerCase())) && (!statusFilter || p.status === statusFilter)).map((project) => (
-                    <div key={project.id} className="bg-gradient-to-br from-blue-100 via-green-50 to-yellow-50 dark:from-blue-900 dark:via-green-900 dark:to-yellow-900 rounded-2xl shadow-2xl p-4 md:p-6 flex flex-col gap-2 hover:ring-2 hover:ring-blue-400 transition cursor-pointer relative text-card-foreground min-w-0 w-full touch-manipulation">
+                  {projects.filter(p => (!search || (p as any).name.toLowerCase().includes((search as string).toLowerCase())) && (!statusFilter || (p as any).status === statusFilter)).map((project) => (
+                    <div key={(project as any).id} className="bg-gradient-to-br from-blue-100 via-green-50 to-yellow-50 dark:from-blue-900 dark:via-green-900 dark:to-yellow-900 rounded-2xl shadow-2xl p-4 md:p-6 flex flex-col gap-2 hover:ring-2 hover:ring-blue-400 transition cursor-pointer relative text-card-foreground min-w-0 w-full touch-manipulation">
                       <div className="flex justify-between items-center mb-2">
                         <h2 className="text-xl font-extrabold flex items-center gap-2 bg-gradient-to-r from-blue-600 via-green-500 to-yellow-400 bg-clip-text text-transparent drop-shadow-lg">
                           <FolderKanban className="w-7 h-7" aria-label="Project" />
-                          {project.name}
+                          {(project as any).name}
                         </h2>
                         <div ref={menuRef} className="relative">
                           <button
                             className="p-1 rounded hover:bg-blue-100"
                             onClick={e => {
                               e.stopPropagation();
-                              setMenuOpenId(menuOpenId === project.id ? null : project.id);
+                              setMenuOpenId(menuOpenId === (project as any).id ? null : (project as any).id);
                             }}
                             title="More options"
                             aria-label="Project actions"
                           >
                             <MoreVertical className="w-5 h-5" />
                           </button>
-                          {menuOpenId === project.id && (
+                          {menuOpenId === (project as any).id && (
                             <div className="absolute top-10 right-2 bg-card border rounded shadow-lg z-10 flex flex-col min-w-[120px] text-card-foreground animate-fade-in">
                               <button className="px-4 py-2 hover:bg-blue-50 text-left" onClick={e => { e.stopPropagation(); setEditProject(project); setShowEdit(true); setMenuOpenId(null); }}>Edit</button>
                               <button className="px-4 py-2 hover:bg-red-50 text-left text-red-600" onClick={e => { e.stopPropagation(); setDeleteProject(project); setShowDelete(true); setMenuOpenId(null); }}>Delete</button>
@@ -172,10 +172,10 @@ export default function ProjectsPage() {
                           )}
                         </div>
                       </div>
-                      <div className="text-gray-600">Due: {project.due_date}</div>
+                      <div className="text-gray-600">Due: {(project as any).due_date}</div>
                       <div className="flex gap-4 text-sm mt-2">
-                        <span className="flex items-center gap-1"><CheckCircle2 className="w-4 h-4 text-green-500" aria-label="Priority" /> {project.priority ? project.priority.charAt(0).toUpperCase() + project.priority.slice(1) : 'Medium'}</span>
-                        <span className="flex items-center gap-1"><Users className="w-4 h-4 text-blue-500" aria-label="Members" /> {project.assigned_members ? project.assigned_members.length : 0} members</span>
+                        <span className="flex items-center gap-1"><CheckCircle2 className="w-4 h-4 text-green-500" aria-label="Priority" /> {(project as any).priority ? (project as any).priority.charAt(0).toUpperCase() + (project as any).priority.slice(1) : 'Medium'}</span>
+                        <span className="flex items-center gap-1"><Users className="w-4 h-4 text-blue-500" aria-label="Members" /> {(project as any).assigned_members ? (project as any).assigned_members.length : 0} members</span>
                       </div>
                     </div>
                   ))}
@@ -203,19 +203,19 @@ export default function ProjectsPage() {
                   <label className="text-sm font-medium">Assign Team Members</label>
                   <div className="flex flex-col gap-2 max-h-48 overflow-y-auto border rounded p-2">
                     {members.map(m => (
-                      <label key={m.id} className="flex items-center gap-2 cursor-pointer">
+                      <label key={(m as any).id} className="flex items-center gap-2 cursor-pointer">
                         <input
                           type="checkbox"
-                          checked={assignedMembers.includes(m.id)}
+                          checked={assignedMembers.includes((m as any).id)}
                           onChange={e => {
                             if (e.target.checked) {
-                              setAssignedMembers(prev => [...prev, m.id]);
+                              setAssignedMembers(prev => [...prev, (m as any).id]);
                             } else {
-                              setAssignedMembers(prev => prev.filter(id => id !== m.id));
+                              setAssignedMembers(prev => prev.filter(id => id !== (m as any).id));
                             }
                           }}
                         />
-                        <span>{m.name} {m.role ? `(${m.role.charAt(0).toUpperCase() + m.role.slice(1)})` : ''}</span>
+                        <span>{(m as any).name} {(m as any).role ? `(${(m as any).role.charAt(0).toUpperCase() + (m as any).role.slice(1)})` : ''}</span>
                       </label>
                     ))}
                   </div>
@@ -239,12 +239,12 @@ export default function ProjectsPage() {
                   setError("");
                   try {
                     const { error } = await supabase.from("projects").update({
-                      name: editProject.name,
-                      description: editProject.description,
-                      due_date: editProject.due_date || null,
-                      priority: editProject.priority,
-                      assigned_members: editProject.assigned_members,
-                    }).eq("id", editProject.id);
+                      name: (editProject as any).name,
+                      description: (editProject as any).description,
+                      due_date: (editProject as any).due_date || null,
+                      priority: (editProject as any).priority,
+                      assigned_members: (editProject as any).assigned_members,
+                    }).eq("id", (editProject as any).id);
                     if (error) throw error;
                     setShowEdit(false);
                     setEditProject(null);
@@ -263,10 +263,10 @@ export default function ProjectsPage() {
                     setCreating(false);
                   }
                 }}>
-                  <Input placeholder="Project Name" value={editProject.name || ""} onChange={e => setEditProject((p: any) => ({ ...p, name: e.target.value }))} required />
-                  <Input placeholder="Description" value={editProject.description || ""} onChange={e => setEditProject((p: any) => ({ ...p, description: e.target.value }))} />
+                  <Input placeholder="Project Name" value={(editProject as any).name || ""} onChange={e => setEditProject((p: unknown) => ({ ...p, name: e.target.value }))} required />
+                  <Input placeholder="Description" value={(editProject as any).description || ""} onChange={e => setEditProject((p: unknown) => ({ ...p, description: e.target.value }))} />
                   <label className="text-sm font-medium">Priority Level</label>
-                  <select className="border rounded p-2" value={editProject.priority || ""} onChange={e => setEditProject((p: any) => ({ ...p, priority: e.target.value }))} required title="Priority Level">
+                  <select className="border rounded p-2" value={(editProject as any).priority || ""} onChange={e => setEditProject((p: unknown) => ({ ...p, priority: e.target.value }))} required title="Priority Level">
                     <option value="low">Low</option>
                     <option value="medium">Medium</option>
                     <option value="high">High</option>
@@ -274,23 +274,23 @@ export default function ProjectsPage() {
                     <option value="emergency">Emergency</option>
                   </select>
                   <label className="text-sm font-medium">Deadline (Optional)</label>
-                  <Input type="date" value={editProject.due_date || ""} onChange={e => setEditProject((p: any) => ({ ...p, due_date: e.target.value }))} />
+                  <Input type="date" value={(editProject as any).due_date || ""} onChange={e => setEditProject((p: unknown) => ({ ...p, due_date: e.target.value }))} />
                   <label className="text-sm font-medium">Assign Team Members</label>
                   <div className="flex flex-col gap-2 max-h-48 overflow-y-auto border rounded p-2">
                     {members.map(m => (
-                      <label key={m.id} className="flex items-center gap-2 cursor-pointer">
+                      <label key={(m as any).id} className="flex items-center gap-2 cursor-pointer">
                         <input
                           type="checkbox"
-                          checked={editProject.assigned_members?.includes(m.id)}
+                          checked={(editProject as any).assigned_members?.includes((m as any).id)}
                           onChange={e => {
                             if (e.target.checked) {
-                              setEditProject((p: any) => ({ ...p, assigned_members: [...(p.assigned_members || []), m.id] }));
+                              setEditProject((p: unknown) => ({ ...p, assigned_members: [...((p as any).assigned_members || []), (m as any).id] }));
                             } else {
-                              setEditProject((p: any) => ({ ...p, assigned_members: (p.assigned_members || []).filter((id: string) => id !== m.id) }));
+                              setEditProject((p: unknown) => ({ ...p, assigned_members: ((p as any).assigned_members || []).filter((id: string) => id !== (m as any).id) }));
                             }
                           }}
                         />
-                        <span>{m.name} {m.role ? `(${m.role.charAt(0).toUpperCase() + m.role.slice(1)})` : ''}</span>
+                        <span>{(m as any).name} {(m as any).role ? `(${(m as any).role.charAt(0).toUpperCase() + (m as any).role.slice(1)})` : ''}</span>
                       </label>
                     ))}
                   </div>
@@ -308,14 +308,14 @@ export default function ProjectsPage() {
             <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
               <div className="bg-card p-6 rounded shadow w-full max-w-md flex flex-col gap-4 items-center text-card-foreground">
                 <h2 className="text-xl font-bold mb-2">Delete Project</h2>
-                <div>Are you sure you want to delete <span className="font-semibold">{deleteProject.name}</span>?</div>
+                <div>Are you sure you want to delete <span className="font-semibold">{(deleteProject as any).name}</span>?</div>
                 {error && <div className="text-red-600 text-sm">{error}</div>}
                 <div className="flex gap-2 mt-2">
                   <Button className="bg-red-600 hover:bg-red-700 text-white" onClick={async () => {
                     setCreating(true);
                     setError("");
                     try {
-                      const { error } = await supabase.from("projects").delete().eq("id", deleteProject.id);
+                      const { error } = await supabase.from("projects").delete().eq("id", (deleteProject as any).id);
                       if (error) throw error;
                       setShowDelete(false);
                       setDeleteProject(null);
@@ -344,11 +344,11 @@ export default function ProjectsPage() {
             <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
               <div className="bg-card p-6 rounded shadow w-full max-w-md flex flex-col gap-4 text-card-foreground">
                 <h2 className="text-xl font-bold mb-2">Project Details</h2>
-                <div><span className="font-semibold">Name:</span> {detailsProject.name}</div>
-                <div><span className="font-semibold">Description:</span> {detailsProject.description}</div>
-                <div><span className="font-semibold">Priority:</span> {detailsProject.priority}</div>
-                <div><span className="font-semibold">Deadline:</span> {detailsProject.due_date}</div>
-                <div><span className="font-semibold">Members:</span> {members.filter(m => detailsProject.assigned_members?.includes(m.id)).map(m => m.name).join(", ") || 'None'}</div>
+                <div><span className="font-semibold">Name:</span> {(detailsProject as any).name}</div>
+                <div><span className="font-semibold">Description:</span> {(detailsProject as any).description}</div>
+                <div><span className="font-semibold">Priority:</span> {(detailsProject as any).priority}</div>
+                <div><span className="font-semibold">Deadline:</span> {(detailsProject as any).due_date}</div>
+                <div><span className="font-semibold">Members:</span> {members.filter((m: any) => (detailsProject as any).assigned_members?.includes((m as any).id)).map((m: any) => (m as any).name).join(", ") || 'None'}</div>
                 <div className="flex gap-2 mt-2">
                   <Button variant="outline" onClick={() => { setShowDetails(false); setDetailsProject(null); }}>Close</Button>
                 </div>

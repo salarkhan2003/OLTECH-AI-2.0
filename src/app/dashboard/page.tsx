@@ -83,8 +83,8 @@ export default function DashboardPage() {
 
   // Stats
   const totalTasks = tasks.length;
-  const completedTasks = tasks.filter(t => (t as any).status === 'done').length;
-  const activeProjects = projects.filter(p => (p as any).status === 'active').length;
+  const completedTasks = tasks.filter(t => (t as Task).status === 'done').length;
+  const activeProjects = projects.filter(p => (p as Project).status === 'active').length;
   const totalMembers = members.length;
   const completionRate = totalTasks ? Math.round((completedTasks / totalTasks) * 100) : 0;
   const productivity = totalTasks ? Math.round((completedTasks / totalTasks) * 100) : 0;
@@ -92,21 +92,21 @@ export default function DashboardPage() {
   // Meetings and Documents stats
   const today = new Date();
   const totalMeetings = meetings.length;
-  const upcomingMeetings = meetings.filter(m => (m as any).start_time && new Date((m as any).start_time) >= today).slice(0, 5);
+  const upcomingMeetings = meetings.filter(m => (m as Meeting).start_time && new Date((m as Meeting).start_time) >= today).slice(0, 5);
   const totalDocuments = documents.length;
-  const recentDocuments = documents.sort((a, b) => new Date((b as any).created_at) - new Date((a as any).created_at)).slice(0, 5);
+  const recentDocuments = documents.sort((a, b) => new Date((b as Document).created_at) - new Date((a as Document).created_at)).slice(0, 5);
 
   // Pie chart: Task status
   const statusPie = [
-    { name: 'To Do', value: tasks.filter(t => (t as any).status === 'todo').length },
-    { name: 'In Progress', value: tasks.filter(t => (t as any).status === 'in_progress').length },
+    { name: 'To Do', value: tasks.filter(t => (t as Task).status === 'todo').length },
+    { name: 'In Progress', value: tasks.filter(t => (t as Task).status === 'in_progress').length },
     { name: 'Done', value: completedTasks },
   ];
 
   // Bar chart: Tasks per member
   const workloadBar = members.map(m => ({
-    name: (m as any).name,
-    Tasks: tasks.filter(t => (t as any).assigned_to === (m as any).id).length,
+    name: (m as Profile).name,
+    Tasks: tasks.filter(t => (t as Task).assigned_to === (m as Profile).id).length,
   }));
 
   // Line chart: 30-day completion trend
@@ -116,25 +116,25 @@ export default function DashboardPage() {
     const key = d.toISOString().slice(0, 10);
     return {
       date: key,
-      Completed: tasks.filter(t => (t as any).status === 'done' && (t as any).updated_at && (t as any).updated_at.slice(0, 10) === key).length,
+      Completed: tasks.filter(t => (t as Task).status === 'done' && (t as Task).updated_at && (t as Task).updated_at.slice(0, 10) === key).length,
     };
   });
 
   // Project progress
   const projectProgress = projects.map(p => {
-    const projTasks = tasks.filter(t => (t as any).project_id === (p as any).id);
-    const done = projTasks.filter(t => (t as any).status === 'done').length;
+    const projTasks = tasks.filter(t => (t as Task).project_id === (p as Project).id);
+    const done = projTasks.filter(t => (t as Task).status === 'done').length;
     return {
-      name: (p as any).name,
+      name: (p as Project).name,
       Progress: projTasks.length ? Math.round((done / projTasks.length) * 100) : 0,
     };
   });
 
   // Upcoming deadlines (next 7 days)
-  const upcoming = tasks.filter(t => (t as any).due_date && new Date((t as any).due_date) >= today && new Date((t as any).due_date) <= new Date(today.getTime() + 7 * 24 * 60 * 60 * 1000));
+  const upcoming = tasks.filter(t => (t as Task).due_date && new Date((t as Task).due_date) >= today && new Date((t as Task).due_date) <= new Date(today.getTime() + 7 * 24 * 60 * 60 * 1000));
 
   // My open tasks
-  const myOpenTasks = tasks.filter(t => (t as any).assigned_to === profile?.id && (t as any).status !== 'done');
+  const myOpenTasks = tasks.filter(t => (t as Task).assigned_to === profile?.id && (t as Task).status !== 'done');
 
   // AI tip
   const getTip = async () => {
@@ -252,7 +252,7 @@ export default function DashboardPage() {
               ) : (
                 <ul className="list-disc pl-5">
                   {myOpenTasks.map(t => (
-                    <li key={(t as any).id} className="mb-1">{(t as any).title} <span className="text-xs text-gray-400">({(t as any).status})</span></li>
+                    <li key={(t as Task).id} className="mb-1">{(t as Task).title} <span className="text-xs text-gray-400">({(t as Task).status})</span></li>
                   ))}
                 </ul>
               )}
@@ -264,7 +264,7 @@ export default function DashboardPage() {
               ) : (
                 <ul className="list-disc pl-5">
                   {activity.map(a => (
-                    <li key={(a as any).id} className="mb-1">{(a as any).description} <span className="text-xs text-gray-400">{(a as any).created_at ? new Date((a as any).created_at).toLocaleString() : ''}</span></li>
+                    <li key={(a as Activity).id} className="mb-1">{(a as Activity).description} <span className="text-xs text-gray-400">{(a as Activity).created_at ? new Date((a as Activity).created_at).toLocaleString() : ''}</span></li>
                   ))}
                 </ul>
               )}
@@ -278,7 +278,7 @@ export default function DashboardPage() {
               ) : (
                 <ul className="list-disc pl-5">
                   {upcoming.map(t => (
-                    <li key={(t as any).id} className="mb-1">{(t as any).title} <span className="text-xs text-gray-400">Due {(t as any).due_date}</span></li>
+                    <li key={(t as Task).id} className="mb-1">{(t as Task).title} <span className="text-xs text-gray-400">Due {(t as Task).due_date}</span></li>
                   ))}
                 </ul>
               )}
@@ -287,8 +287,8 @@ export default function DashboardPage() {
               <h2 className="text-xl font-semibold mb-2">Quick Stats</h2>
               <div>Total Tasks: <b>{totalTasks}</b></div>
               <div>Completed: <b>{completedTasks}</b></div>
-              <div>In Progress: <b>{tasks.filter(t => (t as any).status === 'in_progress').length}</b></div>
-              <div>To Do: <b>{tasks.filter(t => (t as any).status === 'todo').length}</b></div>
+              <div>In Progress: <b>{tasks.filter(t => (t as Task).status === 'in_progress').length}</b></div>
+              <div>To Do: <b>{tasks.filter(t => (t as Task).status === 'todo').length}</b></div>
               <div>Team Efficiency: <b>{productivity}%</b></div>
             </section>
           </div>
@@ -300,8 +300,8 @@ export default function DashboardPage() {
               ) : (
                 <ul className="list-disc pl-5">
                   {upcomingMeetings.map(m => (
-                    <li key={(m as any).id} className="mb-1">
-                      {(m as any).title} <span className="text-xs text-gray-400">{(m as any).start_time ? `Starts ${new Date((m as any).start_time).toLocaleString()}` : ''}</span>
+                    <li key={(m as Meeting).id} className="mb-1">
+                      {(m as Meeting).title} <span className="text-xs text-gray-400">{(m as Meeting).start_time ? `Starts ${new Date((m as Meeting).start_time).toLocaleString()}` : ''}</span>
                     </li>
                   ))}
                 </ul>
@@ -314,8 +314,8 @@ export default function DashboardPage() {
               ) : (
                 <ul className="list-disc pl-5">
                   {recentDocuments.map(d => (
-                    <li key={(d as any).id} className="mb-1">
-                      {(d as any).name} <span className="text-xs text-gray-400">{(d as any).created_at ? `Uploaded ${new Date((d as any).created_at).toLocaleString()}` : ''}</span>
+                    <li key={(d as Document).id} className="mb-1">
+                      {(d as Document).name} <span className="text-xs text-gray-400">{(d as Document).created_at ? `Uploaded ${new Date((d as Document).created_at).toLocaleString()}` : ''}</span>
                     </li>
                   ))}
                 </ul>

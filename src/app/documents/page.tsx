@@ -64,7 +64,7 @@ export default function DocumentsPage() {
     const commentChannel = supabase.channel('document-comments-page')
       .on('postgres_changes', { event: '*', schema: 'public', table: 'document_comments' }, () => {
         // Re-fetch all comments for current files
-        const docIds = files.map(f => (f as any).id);
+        const docIds = files.map(f => (f as unknown as { id: string }).id);
         if (docIds.length > 0) {
           supabase.from("document_comments").select().in("document_id", docIds).then(({ data, error }) => {
             if (!error && data) {
@@ -89,11 +89,11 @@ export default function DocumentsPage() {
   useEffect(() => {
     if (!profile?.group_id || files.length === 0) return;
     const fetchAllComments = async () => {
-      const docIds = files.map(f => (f as any).id);
+      const docIds = files.map(f => (f as unknown as { id: string }).id);
       const { data, error } = await supabase.from("document_comments").select().in("document_id", docIds);
       if (!error && data) {
         const grouped: Record<string, unknown[]> = {};
-        data.forEach((c: any) => {
+        data.forEach((c: unknown) => {
           if (!grouped[c.document_id]) grouped[c.document_id] = [];
           grouped[c.document_id].push(c);
         });
@@ -243,11 +243,11 @@ export default function DocumentsPage() {
 
   // Edit description logic
   const startEditDesc = (doc: unknown) => {
-    setEditingDescId((doc as any).id);
-    setDescEdit((doc as any).description || "");
+    setEditingDescId((doc as unknown as { id: string }).id);
+    setDescEdit((doc as unknown as { description: string }).description || "");
   };
   const saveDesc = async (doc: unknown) => {
-    await supabase.from("documents").update({ description: descEdit }).eq("id", (doc as any).id);
+    await supabase.from("documents").update({ description: descEdit }).eq("id", (doc as unknown as { id: string }).id);
     setEditingDescId(null);
     setDescEdit("");
     // Refresh file list
@@ -257,25 +257,25 @@ export default function DocumentsPage() {
 
   // Add comment logic
   const addComment = async (doc: unknown) => {
-    if (!commentText[(doc as any).id]) return;
-    setCommentLoading((doc as any).id);
+    if (!commentText[(doc as unknown as { id: string }).id]) return;
+    setCommentLoading((doc as unknown as { id: string }).id);
     await supabase.from("document_comments").insert({
-      document_id: (doc as any).id,
+      document_id: (doc as unknown as { id: string }).id,
       user_id: profile.id,
-      text: commentText[(doc as any).id],
+      text: commentText[(doc as unknown as { id: string }).id],
       created_at: new Date().toISOString(),
     });
-    setCommentText((prev) => ({ ...prev, [(doc as any).id]: "" }));
+    setCommentText((prev) => ({ ...prev, [(doc as unknown as { id: string }).id]: "" }));
     setCommentLoading(null);
     // Refresh comments
-    const { data, error } = await supabase.from("document_comments").select().eq("document_id", (doc as any).id);
-    if (!error && data) setComments((prev) => ({ ...prev, [(doc as any).id]: data }));
+    const { data, error } = await supabase.from("document_comments").select().eq("document_id", (doc as unknown as { id: string }).id);
+    if (!error && data) setComments((prev) => ({ ...prev, [(doc as unknown as { id: string }).id]: data }));
   };
 
   // Filtered files
   const filtered = files.filter(f =>
-    (!category || (f as any).category === category) &&
-    (!search || (f as any).name.toLowerCase().includes(search.toLowerCase()) || ((f as any).description || '').toLowerCase().includes(search.toLowerCase()))
+    (!category || (f as unknown as { category: string }).category === category) &&
+    (!search || (f as unknown as { name: string }).name.toLowerCase().includes(search.toLowerCase()) || ((f as unknown as { description: string }).description || '').toLowerCase().includes(search.toLowerCase())))
   );
 
   return (
@@ -360,51 +360,51 @@ export default function DocumentsPage() {
                 {filtered.map(doc => (
                   <div key={doc.id} className="bg-white dark:bg-background rounded-2xl shadow-2xl p-4 md:p-6 flex flex-col gap-2 text-card-foreground min-w-0 w-full touch-manipulation">
                     <div className="font-extrabold text-lg flex items-center gap-2 bg-gradient-to-r from-blue-600 via-green-500 to-yellow-400 bg-clip-text text-transparent drop-shadow-lg">
-                      <FileText className="w-5 h-5" aria-label="Document" /> {(doc as any).name}
+                      <FileText className="w-5 h-5" aria-label="Document" /> {(doc as unknown as { name: string }).name}
                       <Button size="icon" variant="ghost" onClick={() => startEditDesc(doc)} title="Edit Description" aria-label="Edit Description"><Pencil className="w-4 h-4" /></Button>
                     </div>
-                    <div className="text-sm text-gray-600">{(doc as any).category && (doc as any).category.charAt(0).toUpperCase() + (doc as any).category.slice(1)}</div>
+                    <div className="text-sm text-gray-600">{(doc as unknown as { category: string }).category && (doc as unknown as { category: string }).category.charAt(0).toUpperCase() + (doc as unknown as { category: string }).category.slice(1)}</div>
                     <div className="text-xs text-gray-500 font-bold">
-                      Uploaded by: {(profiles.find(p => (p as any).id === (doc as any).uploaded_by)?.name || (doc as any).uploaded_by)}
+                      Uploaded by: {(profiles.find(p => (p as unknown as { id: string }).id === (doc as unknown as { uploaded_by: string }).uploaded_by)?.name || (doc as unknown as { uploaded_by: string }).uploaded_by)}
                     </div>
-                    <div className="text-xs text-gray-500">{(doc as any).file_type} • {Math.round((doc as any).file_size || 0 / 1024)} KB</div>
-                    <div className="text-xs text-gray-500">Uploaded: {(doc as any).created_at ? new Date((doc as any).created_at).toLocaleString() : "-"}</div>
-                    {editingDescId === (doc as any).id ? (
+                    <div className="text-xs text-gray-500">{(doc as unknown as { file_type: string }) && (doc as unknown as { file_type: string }).file_type} • {Math.round((doc as unknown as { file_size: number }).file_size || 0 / 1024)} KB</div>
+                    <div className="text-xs text-gray-500">Uploaded: {(doc as unknown as { created_at: string }) && new Date((doc as unknown as { created_at: string }).created_at).toLocaleString() || "-"}</div>
+                    {editingDescId === (doc as unknown as { id: string }).id ? (
                       <div className="flex gap-2 items-center">
                         <Input value={descEdit} onChange={e => setDescEdit(e.target.value)} className="flex-1" />
                         <Button size="sm" onClick={() => saveDesc(doc)}>Save</Button>
                         <Button size="sm" variant="outline" onClick={() => setEditingDescId(null)}>Cancel</Button>
                       </div>
                     ) : (
-                      <div className="text-xs text-gray-700">{(doc as any).description ? String((doc as any).description) : <span className="italic text-gray-400">No description</span>}</div>
+                      <div className="text-xs text-gray-700">{(doc as unknown as { description: string }).description ? String((doc as unknown as { description: string }).description) : <span className="italic text-gray-400">No description</span>}</div>
                     )}
                     <div className="flex gap-2 mt-2 flex-wrap">
-                      <Button size="sm" variant="outline" onClick={() => handleDownload((doc as any).file_url, (doc as any).name)}>Download</Button>
+                      <Button size="sm" variant="outline" onClick={() => handleDownload((doc as unknown as { file_url: string }).file_url, (doc as unknown as { name: string }).name)}>Download</Button>
                       <Button size="sm" variant="ghost" onClick={() => startEditDesc(doc)} title="Edit Description">Edit</Button>
-                      <Button size="sm" variant="destructive" onClick={() => handleDelete((doc as any).id, (doc as any).file_url)}>Delete</Button>
+                      <Button size="sm" variant="destructive" onClick={() => handleDelete((doc as unknown as { id: string }).id, (doc as unknown as { file_url: string }).file_url)}>Delete</Button>
                     </div>
-                    {(doc as any).project_id && <div className="text-xs text-blue-600">Project: {(projects.find(p => (p as any).id === (doc as any).project_id)?.name)}</div>}
-                    {(doc as any).task_id && <div className="text-xs text-green-600">Task: {(tasks.find(t => (t as any).id === (doc as any).task_id)?.title)}</div>}
+                    {(doc as unknown as { project_id: string }) && <div className="text-xs text-blue-600">Project: {(projects.find(p => (p as unknown as { id: string }).id === (doc as unknown as { project_id: string }).project_id)?.name)}</div>}
+                    {(doc as unknown as { task_id: string }) && <div className="text-xs text-green-600">Task: {(tasks.find(t => (t as unknown as { id: string }).id === (doc as unknown as { task_id: string }).task_id)?.title)}</div>}
                     {/* Comments/Feedback Section */}
                     <div className="mt-2 border-t pt-2">
                       <div className="flex items-center gap-2 mb-1 font-semibold"><MessageCircle className="w-4 h-4" /> Feedback</div>
                       <div className="space-y-1 max-h-24 overflow-y-auto">
-                        {(comments[(doc as any).id] || []).map((c) => (
+                        {(comments[(doc as unknown as { id: string }).id] || []).map((c) => (
                           <div key={c.id} className="text-xs text-gray-800 bg-gray-100 rounded px-2 py-1">
-                            <span className="font-bold">{(c as any).user_id === profile.id ? "You" : (c as any).user_id}</span>: {(c as any).text}
-                            <span className="text-gray-400 ml-2">{(c as any).created_at ? new Date((c as any).created_at).toLocaleString() : ""}</span>
+                            <span className="font-bold">{(c as unknown as { user_id: string }).user_id === profile.id ? "You" : (c as unknown as { user_id: string }).user_id}</span>: {(c as unknown as { text: string }).text}
+                            <span className="text-gray-400 ml-2">{(c as unknown as { created_at: string }) && new Date((c as unknown as { created_at: string }).created_at).toLocaleString() || ""}</span>
                           </div>
                         ))}
                       </div>
                       <div className="flex gap-2 mt-1">
                         <Input
-                          value={commentText[(doc as any).id] || ""}
-                          onChange={e => setCommentText(prev => ({ ...prev, [(doc as any).id]: e.target.value }))}
+                          value={commentText[(doc as unknown as { id: string }).id] || ""}
+                          onChange={e => setCommentText(prev => ({ ...prev, [(doc as unknown as { id: string }).id]: e.target.value }))}
                           placeholder="Add feedback..."
                           className="flex-1"
                           onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); addComment(doc); } }}
                         />
-                        <Button size="sm" onClick={() => addComment(doc)} disabled={commentLoading === (doc as any).id}>Add</Button>
+                        <Button size="sm" onClick={() => addComment(doc)} disabled={commentLoading === (doc as unknown as { id: string }).id}>Add</Button>
                       </div>
                     </div>
                   </div>

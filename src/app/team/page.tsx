@@ -14,12 +14,12 @@ import Image from "next/image";
 
 export default function TeamPage() {
   const { profile } = useUser();
-  const [members, setMembers] = useState<any[]>([]);
-  const [group, setGroup] = useState<any>(null);
+  const [members, setMembers] = useState<unknown[]>([]);
+  const [group, setGroup] = useState<unknown>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [showCode, setShowCode] = useState(false);
-  const [selected, setSelected] = useState<any>(null);
+  const [selected, setSelected] = useState<unknown>(null);
   const [actionLoading, setActionLoading] = useState(false);
   const [confirmRemove, setConfirmRemove] = useState(false);
   const [copied, setCopied] = useState(false);
@@ -89,12 +89,12 @@ export default function TeamPage() {
                   <Button variant="outline" onClick={() => setShowEditGroup(true)}>Edit Group Name</Button>
                 )}
                 <div className="text-xs text-gray-400 mt-2 font-bold">
-                  Group created by: {members.find(m => m.id === group?.created_by)?.name || "Unknown"}
+                  Group created by: {members.find((m: any) => m.id === group?.created_by)?.name || "Unknown"}
                 </div>
               </div>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
-              {members.map(member => (
+              {members.map((member: any) => (
                 <div key={member.id} className="bg-white dark:bg-background rounded-2xl shadow-2xl p-4 md:p-6 flex flex-col gap-2 cursor-pointer hover:ring-2 hover:ring-blue-400 transition text-card-foreground min-w-0 w-full touch-manipulation" onClick={() => setSelected(member)}>
                   <div className="flex items-center gap-4 mb-2">
                     {member.avatar_url ? (

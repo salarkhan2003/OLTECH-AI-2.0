@@ -58,8 +58,8 @@ export default function CalendarPage() {
 
   function getEventsForDay(day: Date) {
     const dayStr = day.toISOString().slice(0, 10);
-    const meetingsForDay = meetings.filter((m: any) => m.start_time && m.start_time.slice(0, 10) === dayStr);
-    const tasksForDay = tasks.filter((t: any) => t.due_date && t.due_date.slice(0, 10) === dayStr);
+    const meetingsForDay = meetings.filter((m: unknown) => (m as any).start_time && (m as any).start_time.slice(0, 10) === dayStr);
+    const tasksForDay = tasks.filter((t: unknown) => (t as any).due_date && (t as any).due_date.slice(0, 10) === dayStr);
     return { meetings: meetingsForDay, tasks: tasksForDay };
   }
 
@@ -112,19 +112,19 @@ export default function CalendarPage() {
                 {getEventsForDay(selectedDate).meetings.length === 0 && getEventsForDay(selectedDate).tasks.length === 0 && (
                   <div className="text-muted-foreground text-center">No meetings or task deadlines for this day.</div>
                 )}
-                {getEventsForDay(selectedDate).meetings.map((m: any) => (
-                  <div key={m.id} className="mb-2 p-3 rounded-xl bg-gradient-to-r from-blue-500 to-green-400 text-white shadow-lg flex flex-col">
-                    <div className="font-semibold">📅 {m.title}</div>
-                    <div className="text-sm">{new Date(m.start_time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} - {new Date(m.end_time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</div>
-                    {m.location && <div className="text-xs">Location: {m.location}</div>}
-                    {m.meeting_link && <a href={m.meeting_link} className="text-xs underline" target="_blank" rel="noopener noreferrer">Join</a>}
+                {getEventsForDay(selectedDate).meetings.map((m: unknown) => (
+                  <div key={(m as any).id} className="mb-2 p-3 rounded-xl bg-gradient-to-r from-blue-500 to-green-400 text-white shadow-lg flex flex-col">
+                    <div className="font-semibold">📅 {(m as any).title}</div>
+                    <div className="text-sm">{new Date((m as any).start_time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} - {new Date((m as any).end_time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</div>
+                    {(m as any).location && <div className="text-xs">Location: {(m as any).location}</div>}
+                    {(m as any).meeting_link && <a href={(m as any).meeting_link} className="text-xs underline" target="_blank" rel="noopener noreferrer">Join</a>}
                   </div>
                 ))}
-                {getEventsForDay(selectedDate).tasks.map((t: any) => (
-                  <div key={t.id} className={`mb-2 p-3 rounded-xl shadow-lg flex flex-col ${(t.priority ? (priorities as Record<string, string>)[t.priority] : 'bg-gray-200 text-black')}`}>
-                    <div className="font-semibold">📝 {t.title}</div>
-                    <div className="text-sm">Deadline: {t.due_date ? new Date(t.due_date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : ''}</div>
-                    {t.project_id && <div className="text-xs">Project: {t.project_id}</div>}
+                {getEventsForDay(selectedDate).tasks.map((t: unknown) => (
+                  <div key={(t as any).id} className={`mb-2 p-3 rounded-xl shadow-lg flex flex-col ${(t as any).priority ? (priorities as Record<string, string>)[(t as any).priority] : 'bg-gray-200 text-black'}`}>
+                    <div className="font-semibold">📝 {(t as any).title}</div>
+                    <div className="text-sm">Deadline: {(t as any).due_date ? new Date((t as any).due_date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : ''}</div>
+                    {(t as any).project_id && <div className="text-xs">Project: {(t as any).project_id}</div>}
                   </div>
                 ))}
               </>
