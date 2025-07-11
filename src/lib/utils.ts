@@ -13,16 +13,16 @@ export function cn(...inputs: ClassValue[]) {
  * @param data - Notification data (object)
  * @param excludeUserId - Optionally exclude a user (e.g., the actor)
  */
-export async function sendTeamNotification(group_id: string, type: string, data: any, excludeUserId?: string) {
+export async function sendTeamNotification(group_id: string, type: string, data: unknown, excludeUserId?: string) {
   // Fetch all team members
   const { data: members, error } = await supabase.from("profiles").select("id").eq("group_id", group_id);
   if (error) return;
-  const targets = members.filter((m: any) => m.id !== excludeUserId);
+  const targets = members.filter((m: unknown) => (m as { id: string }).id !== excludeUserId);
   if (targets.length === 0) return;
   // Insert notifications for each member
   await supabase.from("notifications").insert(
-    targets.map((m: any) => ({
-      user_id: m.id,
+    targets.map((m: unknown) => ({
+      user_id: (m as { id: string }).id,
       type,
       data,
       read: false,

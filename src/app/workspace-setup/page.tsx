@@ -9,6 +9,12 @@ import { useUser } from "@/context/UserContext";
 import { useRouter } from "next/navigation";
 import { Copy } from "lucide-react";
 
+interface Group {
+  id: string;
+  name: string;
+  join_code: string;
+}
+
 function generateJoinCode() {
   return Math.random().toString(36).substring(2, 8).toUpperCase();
 }
@@ -45,8 +51,12 @@ export default function WorkspaceSetupPage() {
       if (profErr) throw profErr;
       setCreatedGroup({ code: group.join_code, name: group.name });
       if (forceRefreshProfile) await forceRefreshProfile();
-    } catch (err: any) {
-      setError(err.message || "Failed to create workspace");
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setError(err.message || "Failed to create workspace");
+      } else {
+        setError("Failed to create workspace due to an unknown error.");
+      }
     } finally {
       setLoading(false);
     }
@@ -79,8 +89,12 @@ export default function WorkspaceSetupPage() {
       if (profErr) throw profErr;
       if (forceRefreshProfile) await forceRefreshProfile();
       router.push("/dashboard");
-    } catch (err: any) {
-      setError(err.message || "Failed to join workspace");
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setError(err.message || "Failed to join workspace");
+      } else {
+        setError("Failed to join workspace due to an unknown error.");
+      }
     } finally {
       setLoading(false);
     }
