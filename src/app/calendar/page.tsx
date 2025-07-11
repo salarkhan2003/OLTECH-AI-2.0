@@ -229,4 +229,17 @@ export default function CalendarPage() {
                   </div>
                 ))}
                 {getEventsForDay(selectedDate).tasks.map((t: any) => (
-                  <div key={t.id} className={`
+                  <div key={t.id} className={`mb-2 p-3 rounded-xl shadow-lg flex flex-col ${(t.priority ? (priorities as Record<string, string>)[t.priority] : 'bg-gray-200 text-black')}`}>
+                    <div className="font-semibold">📝 {t.title}</div>
+                    <div className="text-sm">Deadline: {t.due_date ? new Date(t.due_date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : ''}</div>
+                    {t.project_id && <div className="text-xs">Project: {t.project_id}</div>}
+                  </div>
+                ))}
+              </>
+            )}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
