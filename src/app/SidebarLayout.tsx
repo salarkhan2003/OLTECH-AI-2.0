@@ -7,6 +7,7 @@ import { useUser } from "@/context/UserContext";
 import { getAuth, signOut as fbSignOut } from "firebase/auth";
 import { supabase } from "@/lib/supabase";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 export default function SidebarLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
@@ -67,7 +68,7 @@ export default function SidebarLayout({ children }: { children: React.ReactNode 
               aria-label="Open profile menu"
             >
               {profile?.avatar_url ? (
-                <img src={profile.avatar_url} alt={profile.name} className="w-9 h-9 rounded-full border-2 border-blue-300 shadow" />
+                <Image src={profile.avatar_url} alt={profile.name} width={36} height={36} className="w-9 h-9 rounded-full border-2 border-blue-300 shadow" />
               ) : (
                 <UserCircle2 className="w-9 h-9 text-blue-400" />
               )}

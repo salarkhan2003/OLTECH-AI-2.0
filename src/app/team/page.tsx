@@ -10,6 +10,7 @@ import { UserCircle2, ShieldCheck, Users, PlusCircle } from "lucide-react";
 import { sendTeamNotification } from "@/lib/utils";
 import { BackButton } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import Image from "next/image";
 
 export default function TeamPage() {
   const { profile } = useUser();
@@ -97,7 +98,7 @@ export default function TeamPage() {
                 <div key={member.id} className="bg-white dark:bg-background rounded-2xl shadow-2xl p-4 md:p-6 flex flex-col gap-2 cursor-pointer hover:ring-2 hover:ring-blue-400 transition text-card-foreground min-w-0 w-full touch-manipulation" onClick={() => setSelected(member)}>
                   <div className="flex items-center gap-4 mb-2">
                     {member.avatar_url ? (
-                      <img src={member.avatar_url} alt={member.name} className="w-16 h-16 rounded-full border-2 border-blue-200 shadow-lg" />
+                      <Image src={member.avatar_url} alt={member.name} width={64} height={64} className="w-16 h-16 rounded-full border-2 border-blue-200 shadow-lg" />
                     ) : (
                       <UserCircle2 className="w-16 h-16 text-blue-500" />
                     )}
@@ -141,7 +142,7 @@ export default function TeamPage() {
           <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
             <div className="bg-card p-6 rounded shadow w-full max-w-md flex flex-col gap-4 items-center text-card-foreground">
               {selected.avatar_url ? (
-                <img src={selected.avatar_url} alt={selected.name} className="w-20 h-20 rounded-full" />
+                <Image src={selected.avatar_url} alt={selected.name} width={80} height={80} className="w-20 h-20 rounded-full" />
               ) : (
                 <UserCircle2 className="w-20 h-20 text-blue-500" />
               )}
@@ -225,8 +226,12 @@ export default function TeamPage() {
                     if (error) throw error;
                     setGroup((g: any) => ({ ...g, name: editGroupName }));
                     setShowEditGroup(false);
-                  } catch (err: any) {
-                    setEditGroupError(err.message || "Failed to update group name");
+                  } catch (err: unknown) {
+                    if (err instanceof Error) {
+                      setEditGroupError(err.message || "Failed to update group name");
+                    } else {
+                      setEditGroupError("An unexpected error occurred.");
+                    }
                   } finally {
                     setEditGroupLoading(false);
                   }

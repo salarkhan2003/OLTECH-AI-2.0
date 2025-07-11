@@ -76,13 +76,13 @@ export default function AIPage() {
   // Build workspace context string
   const workspaceContext = notifications.length > 0
     ? notifications.slice(0, 10).map(n => {
-        if ((n as any).type === "task_assigned") return `Task assigned: ${(n as any).data?.title}`;
-        if ((n as any).type === "team_member_added") return `New teammate: ${(n as any).data?.name}`;
-        if ((n as any).type === "team_member_removed") return `Teammate removed: ${(n as any).data?.name}`;
-        if ((n as any).type === "team_member_updated") return `Teammate updated: ${(n as any).data?.name}`;
-        if ((n as any).type === "project_assigned") return `Project assigned: ${(n as any).data?.name}`;
-        if ((n as any).type === "document_tagged") return `Tagged in document: ${(n as any).data?.title}`;
-        return (n as any).data?.message || (n as any).type;
+        if ((n as unknown as { type: string }).type === "task_assigned") return `Task assigned: ${(n as unknown as { data: { title: string } }).data?.title}`;
+        if ((n as unknown as { type: string }).type === "team_member_added") return `New teammate: ${(n as unknown as { data: { name: string } }).data?.name}`;
+        if ((n as unknown as { type: string }).type === "team_member_removed") return `Teammate removed: ${(n as unknown as { data: { name: string } }).data?.name}`;
+        if ((n as unknown as { type: string }).type === "team_member_updated") return `Teammate updated: ${(n as unknown as { data: { name: string } }).data?.name}`;
+        if ((n as unknown as { type: string }).type === "project_assigned") return `Project assigned: ${(n as unknown as { data: { name: string } }).data?.name}`;
+        if ((n as unknown as { type: string }).type === "document_tagged") return `Tagged in document: ${(n as unknown as { data: { title: string } }).data?.title}`;
+        return (n as unknown as { data: { message: string } }).data?.message || (n as unknown as { type: string }).type;
       }).join("\n")
     : "";
 
@@ -112,9 +112,9 @@ export default function AIPage() {
 
   // Suggested prompts based on notifications
   const dynamicSuggestions = [
-    ...(notifications.some((n: unknown) => (n as any).type === "task_assigned") ? ["Summarize my new tasks"] : []),
-    ...(notifications.some((n: unknown) => (n as any).type === "project_assigned") ? ["What are my current projects?"] : []),
-    ...(notifications.some((n: unknown) => (n as any).type === "document_tagged") ? ["What documents was I tagged in?"] : []),
+    ...(notifications.some((n: unknown) => (n as unknown as { type: string }).type === "task_assigned") ? ["Summarize my new tasks"] : []),
+    ...(notifications.some((n: unknown) => (n as unknown as { type: string }).type === "project_assigned") ? ["What are my current projects?"] : []),
+    ...(notifications.some((n: unknown) => (n as unknown as { type: string }).type === "document_tagged") ? ["What documents was I tagged in?"] : []),
     "What should I focus on today?",
     ...SUGGESTED,
   ];

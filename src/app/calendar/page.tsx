@@ -41,8 +41,8 @@ export default function CalendarPage() {
   const [current, setCurrent] = useState({ year: today.getFullYear(), month: today.getMonth() });
   const [showMeetingModal, setShowMeetingModal] = useState(false);
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
-  const [meetings, setMeetings] = useState<any[]>([]);
-  const [tasks, setTasks] = useState<any[]>([]);
+  const [meetings, setMeetings] = useState<unknown[]>([]);
+  const [tasks, setTasks] = useState<unknown[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [form, setForm] = useState({
@@ -99,8 +99,8 @@ export default function CalendarPage() {
   // --- Helper: Get meetings/tasks for a specific day ---
   function getEventsForDay(day: Date) {
     const dayStr = day.toISOString().slice(0, 10);
-    const meetingsForDay = meetings.filter(m => m.start_time && m.start_time.slice(0, 10) === dayStr);
-    const tasksForDay = tasks.filter(t => t.due_date && t.due_date.slice(0, 10) === dayStr);
+    const meetingsForDay = meetings.filter((m: any) => m.start_time && m.start_time.slice(0, 10) === dayStr);
+    const tasksForDay = tasks.filter((t: any) => t.due_date && t.due_date.slice(0, 10) === dayStr);
     return { meetings: meetingsForDay, tasks: tasksForDay };
   }
 
@@ -220,7 +220,7 @@ export default function CalendarPage() {
                 {getEventsForDay(selectedDate).meetings.length === 0 && getEventsForDay(selectedDate).tasks.length === 0 && (
                   <div className="text-muted-foreground text-center">No meetings or task deadlines for this day.</div>
                 )}
-                {getEventsForDay(selectedDate).meetings.map(m => (
+                {getEventsForDay(selectedDate).meetings.map((m: any) => (
                   <div key={m.id} className="mb-2 p-3 rounded-xl bg-gradient-to-r from-blue-500 to-green-400 text-white shadow-lg flex flex-col">
                     <div className="font-semibold">📅 {m.title}</div>
                     <div className="text-sm">{new Date(m.start_time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} - {new Date(m.end_time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</div>
@@ -228,38 +228,5 @@ export default function CalendarPage() {
                     {m.meeting_link && <a href={m.meeting_link} className="text-xs underline" target="_blank" rel="noopener noreferrer">Join</a>}
                   </div>
                 ))}
-                {getEventsForDay(selectedDate).tasks.map(t => (
-                  <div key={t.id} className={`mb-2 p-3 rounded-xl shadow-lg flex flex-col ${(priorities as Record<string, string>)[t.priority] || 'bg-gray-200 text-black'}`}>
-                    <div className="font-semibold">📝 {t.title}</div>
-                    <div className="text-sm">Deadline: {new Date(t.due_date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</div>
-                    {t.project_id && <div className="text-xs">Project: {t.project_id}</div>}
-              </div>
-                ))}
-              </>
-            )}
-            </div>
-          )}
-      {/* Meeting creation modal */}
-      {showMeetingModal && (
-            <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
-          <form onSubmit={handleCreateMeeting} className="bg-card p-8 rounded-2xl shadow-2xl w-full max-w-lg flex flex-col gap-4 text-card-foreground">
-            <h2 className="text-2xl font-bold mb-2">Create New Meeting</h2>
-            <Input placeholder="Title *" value={form.title} onChange={e => setForm(f => ({ ...f, title: e.target.value }))} />
-            <Input placeholder="Description" value={form.description} onChange={e => setForm(f => ({ ...f, description: e.target.value }))} />
-            <label className="text-sm font-medium">Start Time *</label>
-            <input type="datetime-local" className="border rounded p-2" value={form.start_time} onChange={e => setForm(f => ({ ...f, start_time: e.target.value }))} title="Start Time" placeholder="Select start time" />
-            <label className="text-sm font-medium">End Time *</label>
-            <input type="datetime-local" className="border rounded p-2" value={form.end_time} onChange={e => setForm(f => ({ ...f, end_time: e.target.value }))} title="End Time" placeholder="Select end time" />
-            <Input placeholder="Location" value={form.location} onChange={e => setForm(f => ({ ...f, location: e.target.value }))} />
-            <Input placeholder="Meeting Link (optional)" value={form.meeting_link} onChange={e => setForm(f => ({ ...f, meeting_link: e.target.value }))} />
-                  {error && <div className="text-red-600 text-sm">{error}</div>}
-                  <div className="flex gap-2 mt-2">
-              <Button type="submit" className="bg-blue-600 hover:bg-blue-700 text-white" disabled={loading}>{loading ? "Saving..." : "Create"}</Button>
-              <Button variant="outline" type="button" onClick={() => { setShowMeetingModal(false); setForm({ title: "", description: "", start_time: "", end_time: "", location: "", meeting_link: "" }); setError(""); }}>Cancel</Button>
-                  </div>
-                </form>
-              </div>
-      )}
-            </div>
-  );
-} 
+                {getEventsForDay(selectedDate).tasks.map((t: any) => (
+                  <div key={t.id} className={`

@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { useRouter } from "next/navigation";
 import { getAuth, sendPasswordResetEmail, signOut as fbSignOut } from "firebase/auth";
 import { ArrowLeft } from "lucide-react";
+import Image from "next/image";
 
 export default function ProfilePage() {
   const { profile, user, refreshProfile } = useUser();
@@ -43,18 +44,18 @@ export default function ProfilePage() {
     }
   }, [profile]);
 
-  const handleChange = (e: any) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm(f => ({ ...f, [e.target.name]: e.target.value }));
   };
 
-  const handleAvatarChange = (e: any) => {
-    const file = e.target.files[0];
+  const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
     if (!file) return;
     setAvatarFile(file);
     setAvatarPreview(URL.createObjectURL(file));
   };
 
-  const handleSave = async (e: any) => {
+  const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
     setStatus("Saving...");
     try {
@@ -74,12 +75,16 @@ export default function ProfilePage() {
       refreshProfile && refreshProfile();
       setAvatarPreview(null);
       setAvatarFile(null);
-    } catch (err: any) {
-      setStatus(err.message || "Failed to update profile");
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setStatus(err.message || "Failed to update profile");
+      } else {
+        setStatus("Failed to update profile");
+      }
     }
   };
 
-  const handlePasswordChange = async (e: any) => {
+  const handlePasswordChange = async (e: React.FormEvent) => {
     e.preventDefault();
     setPwStatus("Updating password...");
     if (pw.new !== pw.confirm) {
@@ -96,16 +101,24 @@ export default function ProfilePage() {
       await fbSignOut(getAuth());
       await supabase.auth.signOut();
       router.push("/login");
-    } catch (err) {
-      setStatus("Logout failed");
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setStatus("Logout failed: " + err.message);
+      } else {
+        setStatus("Logout failed");
+      }
     }
   };
   const handleResetPassword = async () => {
     try {
       await sendPasswordResetEmail(getAuth(), form.email);
       setStatus("Password reset email sent!");
-    } catch (err) {
-      setStatus("Failed to send reset email");
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setStatus("Failed to send reset email: " + err.message);
+      } else {
+        setStatus("Failed to send reset email");
+      }
     }
   };
 
@@ -130,7 +143,7 @@ export default function ProfilePage() {
         <form className="flex flex-col gap-4" onSubmit={handleSave}>
           <div className="flex flex-col items-center gap-2 sm:flex-row sm:items-center sm:gap-4">
             {(avatarPreview || form.avatar_url) ? (
-              <img src={avatarPreview || form.avatar_url} alt="Avatar" className="w-20 h-20 rounded-full object-cover" />
+              <Image src={avatarPreview || form.avatar_url} alt="Avatar" width={80} height={80} className="w-20 h-20 rounded-full object-cover" />
             ) : (
               <div className="w-20 h-20 rounded-full bg-gray-700 flex items-center justify-center text-3xl text-white">{form.name?.[0]}</div>
             )}

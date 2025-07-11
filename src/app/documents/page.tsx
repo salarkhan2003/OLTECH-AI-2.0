@@ -14,9 +14,9 @@ const categories = ["design", "development", "documentation", "media", "other"];
 
 export default function DocumentsPage() {
   const { profile } = useUser();
-  const [files, setFiles] = useState<any[]>([]);
-  const [projects, setProjects] = useState<any[]>([]);
-  const [tasks, setTasks] = useState<any[]>([]);
+  const [files, setFiles] = useState<unknown[]>([]);
+  const [projects, setProjects] = useState<unknown[]>([]);
+  const [tasks, setTasks] = useState<unknown[]>([]);
   const [category, setCategory] = useState("");
   const [search, setSearch] = useState("");
   const [uploading, setUploading] = useState(false);
@@ -29,12 +29,12 @@ export default function DocumentsPage() {
   const inputRef = useRef<HTMLInputElement>(null);
   const [editingDescId, setEditingDescId] = useState<string | null>(null);
   const [descEdit, setDescEdit] = useState("");
-  const [comments, setComments] = useState<Record<string, any[]>>({});
+  const [comments, setComments] = useState<Record<string, unknown[]>>({});
   const [commentText, setCommentText] = useState<Record<string, string>>({});
   const [commentLoading, setCommentLoading] = useState<string | null>(null);
   const [fileDescription, setFileDescription] = useState("");
   const [debugInfo, setDebugInfo] = useState("");
-  const [profiles, setProfiles] = useState<any[]>([]);
+  const [profiles, setProfiles] = useState<unknown[]>([]);
 
   // Fetch files, projects, tasks, and profiles
   useEffect(() => {
@@ -64,7 +64,7 @@ export default function DocumentsPage() {
     const commentChannel = supabase.channel('document-comments-page')
       .on('postgres_changes', { event: '*', schema: 'public', table: 'document_comments' }, () => {
         // Re-fetch all comments for current files
-        const docIds = files.map(f => f.id);
+        const docIds = files.map(f => (f as any).id);
         if (docIds.length > 0) {
           supabase.from("document_comments").select().in("document_id", docIds).then(({ data, error }) => {
             if (!error && data) {
@@ -89,10 +89,10 @@ export default function DocumentsPage() {
   useEffect(() => {
     if (!profile?.group_id || files.length === 0) return;
     const fetchAllComments = async () => {
-      const docIds = files.map(f => f.id);
+      const docIds = files.map(f => (f as any).id);
       const { data, error } = await supabase.from("document_comments").select().in("document_id", docIds);
       if (!error && data) {
-        const grouped: Record<string, any[]> = {};
+        const grouped: Record<string, unknown[]> = {};
         data.forEach((c: any) => {
           if (!grouped[c.document_id]) grouped[c.document_id] = [];
           grouped[c.document_id].push(c);
@@ -242,12 +242,12 @@ export default function DocumentsPage() {
   };
 
   // Edit description logic
-  const startEditDesc = (doc: any) => {
-    setEditingDescId(doc.id);
-    setDescEdit(doc.description || "");
+  const startEditDesc = (doc: unknown) => {
+    setEditingDescId((doc as any).id);
+    setDescEdit((doc as any).description || "");
   };
-  const saveDesc = async (doc: any) => {
-    await supabase.from("documents").update({ description: descEdit }).eq("id", doc.id);
+  const saveDesc = async (doc: unknown) => {
+    await supabase.from("documents").update({ description: descEdit }).eq("id", (doc as any).id);
     setEditingDescId(null);
     setDescEdit("");
     // Refresh file list
@@ -256,26 +256,26 @@ export default function DocumentsPage() {
   };
 
   // Add comment logic
-  const addComment = async (doc: any) => {
-    if (!commentText[doc.id]) return;
-    setCommentLoading(doc.id);
+  const addComment = async (doc: unknown) => {
+    if (!commentText[(doc as any).id]) return;
+    setCommentLoading((doc as any).id);
     await supabase.from("document_comments").insert({
-      document_id: doc.id,
+      document_id: (doc as any).id,
       user_id: profile.id,
-      text: commentText[doc.id],
+      text: commentText[(doc as any).id],
       created_at: new Date().toISOString(),
     });
-    setCommentText((prev) => ({ ...prev, [doc.id]: "" }));
+    setCommentText((prev) => ({ ...prev, [(doc as any).id]: "" }));
     setCommentLoading(null);
     // Refresh comments
-    const { data, error } = await supabase.from("document_comments").select().eq("document_id", doc.id);
-    if (!error && data) setComments((prev) => ({ ...prev, [doc.id]: data }));
+    const { data, error } = await supabase.from("document_comments").select().eq("document_id", (doc as any).id);
+    if (!error && data) setComments((prev) => ({ ...prev, [(doc as any).id]: data }));
   };
 
   // Filtered files
   const filtered = files.filter(f =>
-    (!category || f.category === category) &&
-    (!search || f.name.toLowerCase().includes(search.toLowerCase()) || (f.description || '').toLowerCase().includes(search.toLowerCase()))
+    (!category || (f as any).category === category) &&
+    (!search || (f as any).name.toLowerCase().includes(search.toLowerCase()) || ((f as any).description || '').toLowerCase().includes(search.toLowerCase()))
   );
 
   return (
@@ -360,51 +360,51 @@ export default function DocumentsPage() {
                 {filtered.map(doc => (
                   <div key={doc.id} className="bg-white dark:bg-background rounded-2xl shadow-2xl p-4 md:p-6 flex flex-col gap-2 text-card-foreground min-w-0 w-full touch-manipulation">
                     <div className="font-extrabold text-lg flex items-center gap-2 bg-gradient-to-r from-blue-600 via-green-500 to-yellow-400 bg-clip-text text-transparent drop-shadow-lg">
-                      <FileText className="w-5 h-5" aria-label="Document" /> {String(doc.name)}
+                      <FileText className="w-5 h-5" aria-label="Document" /> {(doc as any).name}
                       <Button size="icon" variant="ghost" onClick={() => startEditDesc(doc)} title="Edit Description" aria-label="Edit Description"><Pencil className="w-4 h-4" /></Button>
                     </div>
-                    <div className="text-sm text-gray-600">{doc.category && doc.category.charAt(0).toUpperCase() + doc.category.slice(1)}</div>
+                    <div className="text-sm text-gray-600">{(doc as any).category && (doc as any).category.charAt(0).toUpperCase() + (doc as any).category.slice(1)}</div>
                     <div className="text-xs text-gray-500 font-bold">
-                      Uploaded by: {profiles.find(p => p.id === doc.uploaded_by)?.name || doc.uploaded_by}
+                      Uploaded by: {(profiles.find(p => (p as any).id === (doc as any).uploaded_by)?.name || (doc as any).uploaded_by)}
                     </div>
-                    <div className="text-xs text-gray-500">{doc.file_type} • {Math.round((doc.file_size || 0) / 1024)} KB</div>
-                    <div className="text-xs text-gray-500">Uploaded: {doc.created_at ? new Date(doc.created_at).toLocaleString() : "-"}</div>
-                    {editingDescId === doc.id ? (
+                    <div className="text-xs text-gray-500">{(doc as any).file_type} • {Math.round((doc as any).file_size || 0 / 1024)} KB</div>
+                    <div className="text-xs text-gray-500">Uploaded: {(doc as any).created_at ? new Date((doc as any).created_at).toLocaleString() : "-"}</div>
+                    {editingDescId === (doc as any).id ? (
                       <div className="flex gap-2 items-center">
                         <Input value={descEdit} onChange={e => setDescEdit(e.target.value)} className="flex-1" />
                         <Button size="sm" onClick={() => saveDesc(doc)}>Save</Button>
                         <Button size="sm" variant="outline" onClick={() => setEditingDescId(null)}>Cancel</Button>
                       </div>
                     ) : (
-                      <div className="text-xs text-gray-700">{doc.description ? String(doc.description) : <span className="italic text-gray-400">No description</span>}</div>
+                      <div className="text-xs text-gray-700">{(doc as any).description ? String((doc as any).description) : <span className="italic text-gray-400">No description</span>}</div>
                     )}
                     <div className="flex gap-2 mt-2 flex-wrap">
-                      <Button size="sm" variant="outline" onClick={() => handleDownload(doc.file_url, doc.name)}>Download</Button>
+                      <Button size="sm" variant="outline" onClick={() => handleDownload((doc as any).file_url, (doc as any).name)}>Download</Button>
                       <Button size="sm" variant="ghost" onClick={() => startEditDesc(doc)} title="Edit Description">Edit</Button>
-                      <Button size="sm" variant="destructive" onClick={() => handleDelete(doc.id, doc.file_url)}>Delete</Button>
+                      <Button size="sm" variant="destructive" onClick={() => handleDelete((doc as any).id, (doc as any).file_url)}>Delete</Button>
                     </div>
-                    {doc.project_id && <div className="text-xs text-blue-600">Project: {projects.find(p => p.id === doc.project_id)?.name}</div>}
-                    {doc.task_id && <div className="text-xs text-green-600">Task: {tasks.find(t => t.id === doc.task_id)?.title}</div>}
+                    {(doc as any).project_id && <div className="text-xs text-blue-600">Project: {(projects.find(p => (p as any).id === (doc as any).project_id)?.name)}</div>}
+                    {(doc as any).task_id && <div className="text-xs text-green-600">Task: {(tasks.find(t => (t as any).id === (doc as any).task_id)?.title)}</div>}
                     {/* Comments/Feedback Section */}
                     <div className="mt-2 border-t pt-2">
                       <div className="flex items-center gap-2 mb-1 font-semibold"><MessageCircle className="w-4 h-4" /> Feedback</div>
                       <div className="space-y-1 max-h-24 overflow-y-auto">
-                        {(comments[doc.id] || []).map((c) => (
+                        {(comments[(doc as any).id] || []).map((c) => (
                           <div key={c.id} className="text-xs text-gray-800 bg-gray-100 rounded px-2 py-1">
-                            <span className="font-bold">{c.user_id === profile.id ? "You" : c.user_id}</span>: {c.text}
-                            <span className="text-gray-400 ml-2">{c.created_at ? new Date(c.created_at).toLocaleString() : ""}</span>
+                            <span className="font-bold">{(c as any).user_id === profile.id ? "You" : (c as any).user_id}</span>: {(c as any).text}
+                            <span className="text-gray-400 ml-2">{(c as any).created_at ? new Date((c as any).created_at).toLocaleString() : ""}</span>
                           </div>
                         ))}
                       </div>
                       <div className="flex gap-2 mt-1">
                         <Input
-                          value={commentText[doc.id] || ""}
-                          onChange={e => setCommentText(prev => ({ ...prev, [doc.id]: e.target.value }))}
+                          value={commentText[(doc as any).id] || ""}
+                          onChange={e => setCommentText(prev => ({ ...prev, [(doc as any).id]: e.target.value }))}
                           placeholder="Add feedback..."
                           className="flex-1"
                           onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); addComment(doc); } }}
                         />
-                        <Button size="sm" onClick={() => addComment(doc)} disabled={commentLoading === doc.id}>Add</Button>
+                        <Button size="sm" onClick={() => addComment(doc)} disabled={commentLoading === (doc as any).id}>Add</Button>
                       </div>
                     </div>
                   </div>

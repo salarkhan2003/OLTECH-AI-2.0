@@ -11,9 +11,9 @@ const COLORS = ["#22d3ee", "#fbbf24", "#34d399", "#f87171", "#a78bfa", "#f472b6"
 
 export default function AnalyticsPage() {
   const { profile } = useUser();
-  const [tasks, setTasks] = useState<any[]>([]);
-  const [projects, setProjects] = useState<any[]>([]);
-  const [members, setMembers] = useState<any[]>([]);
+  const [tasks, setTasks] = useState<unknown[]>([]);
+  const [projects, setProjects] = useState<unknown[]>([]);
+  const [members, setMembers] = useState<unknown[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
@@ -58,21 +58,21 @@ export default function AnalyticsPage() {
 
   // Summary stats
   const totalTasks = tasks.length;
-  const completedTasks = tasks.filter(t => t.status === 'done').length;
-  const activeProjects = projects.filter(p => p.status === 'active').length;
+  const completedTasks = tasks.filter(t => (t as any).status === 'done').length;
+  const activeProjects = projects.filter(p => (p as any).status === 'active').length;
   const completionRate = totalTasks ? Math.round((completedTasks / totalTasks) * 100) : 0;
 
   // Task status pie
   const statusPie = [
-    { name: 'To Do', value: tasks.filter(t => t.status === 'todo').length },
-    { name: 'In Progress', value: tasks.filter(t => t.status === 'in_progress').length },
+    { name: 'To Do', value: tasks.filter(t => (t as any).status === 'todo').length },
+    { name: 'In Progress', value: tasks.filter(t => (t as any).status === 'in_progress').length },
     { name: 'Done', value: completedTasks },
   ];
 
   // Team workload bar
   const workloadBar = members.map(m => ({
-    name: m.name,
-    Tasks: tasks.filter(t => t.assigned_to === m.id).length,
+    name: (m as any).name,
+    Tasks: tasks.filter(t => (t as any).assigned_to === (m as any).id).length,
   }));
 
   // 30-day completion trend
@@ -83,16 +83,16 @@ export default function AnalyticsPage() {
     const key = d.toISOString().slice(0, 10);
     return {
       date: key,
-      Completed: tasks.filter(t => t.status === 'done' && t.updated_at && t.updated_at.slice(0, 10) === key).length,
+      Completed: tasks.filter(t => (t as any).status === 'done' && (t as any).updated_at && (t as any).updated_at.slice(0, 10) === key).length,
     };
   });
 
   // Project progress
   const projectProgress = projects.map(p => {
-    const projTasks = tasks.filter(t => t.project_id === p.id);
-    const done = projTasks.filter(t => t.status === 'done').length;
+    const projTasks = tasks.filter(t => (t as any).project_id === (p as any).id);
+    const done = projTasks.filter(t => (t as any).status === 'done').length;
     return {
-      name: p.name,
+      name: (p as any).name,
       Progress: projTasks.length ? Math.round((done / projTasks.length) * 100) : 0,
     };
   });

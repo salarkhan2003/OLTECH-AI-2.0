@@ -22,8 +22,10 @@ export default function SignupPage() {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       await updateProfile(userCredential.user, { displayName: name });
       router.replace("/workspace-setup");
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setError(err.message);
+      }
     } finally {
       setLoading(false);
     }
@@ -36,8 +38,10 @@ export default function SignupPage() {
       const provider = new GoogleAuthProvider();
       await signInWithPopup(auth, provider);
       router.replace("/workspace-setup");
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setError(err.message);
+      }
     } finally {
       setLoading(false);
     }

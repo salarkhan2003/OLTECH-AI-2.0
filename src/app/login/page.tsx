@@ -20,8 +20,10 @@ export default function LoginPage() {
     try {
       await signInWithEmailAndPassword(auth, email, password);
       router.replace("/dashboard");
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setError(err.message);
+      }
     } finally {
       setLoading(false);
     }
@@ -34,8 +36,10 @@ export default function LoginPage() {
       const provider = new GoogleAuthProvider();
       await signInWithPopup(auth, provider);
       router.replace("/dashboard");
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setError(err.message);
+      }
     } finally {
       setLoading(false);
     }

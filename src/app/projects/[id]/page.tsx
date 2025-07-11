@@ -11,12 +11,12 @@ export default function ProjectDetailsPage() {
   const router = useRouter();
   const params = useParams();
   const projectId = params?.id as string;
-  const [project, setProject] = useState<any>(null);
+  const [project, setProject] = useState<unknown>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const { profile } = useUser();
   const [editMode, setEditMode] = useState(false);
-  const [editData, setEditData] = useState<any>(null);
+  const [editData, setEditData] = useState<unknown>(null);
   const [deleteConfirm, setDeleteConfirm] = useState(false);
   const [actionLoading, setActionLoading] = useState(false);
   const [actionError, setActionError] = useState("");
@@ -49,17 +49,17 @@ export default function ProjectDetailsPage() {
     setActionError("");
     try {
       const { error } = await supabase.from("projects").update({
-        name: editData.name,
-        description: editData.description,
-        due_date: editData.due_date,
-        priority: editData.priority,
-        assigned_members: editData.assigned_members,
+        name: (editData as any).name,
+        description: (editData as any).description,
+        due_date: (editData as any).due_date,
+        priority: (editData as any).priority,
+        assigned_members: (editData as any).assigned_members,
       }).eq("id", projectId);
       if (error) throw error;
       setEditMode(false);
       setProject({ ...project, ...editData });
-    } catch (err: any) {
-      setActionError(err.message || "Failed to update project");
+    } catch (err: unknown) {
+      setActionError((err as Error).message || "Failed to update project");
     } finally {
       setActionLoading(false);
     }
@@ -72,8 +72,8 @@ export default function ProjectDetailsPage() {
       const { error } = await supabase.from("projects").delete().eq("id", projectId);
       if (error) throw error;
       router.push("/projects");
-    } catch (err: any) {
-      setActionError(err.message || "Failed to delete project");
+    } catch (err: unknown) {
+      setActionError((err as Error).message || "Failed to delete project");
     } finally {
       setActionLoading(false);
       setDeleteConfirm(false);
@@ -87,10 +87,10 @@ export default function ProjectDetailsPage() {
         {editMode ? (
           <div className="bg-white rounded shadow p-6 flex flex-col gap-4">
             <h2 className="text-xl font-bold mb-2">Edit Project</h2>
-            <input className="border rounded p-2" value={editData.name} onChange={e => setEditData(d => ({ ...d, name: e.target.value }))} title="Project Name" placeholder="Project Name" />
-            <textarea className="border rounded p-2" value={editData.description} onChange={e => setEditData(d => ({ ...d, description: e.target.value }))} title="Description" placeholder="Description" />
-            <input className="border rounded p-2" type="date" value={editData.due_date || ""} onChange={e => setEditData(d => ({ ...d, due_date: e.target.value }))} title="Deadline" placeholder="Deadline" />
-            <select className="border rounded p-2" value={editData.priority || "medium"} onChange={e => setEditData(d => ({ ...d, priority: e.target.value }))} title="Priority Level">
+            <input className="border rounded p-2" value={(editData as any).name} onChange={e => setEditData(d => ({ ...d, name: e.target.value }))} title="Project Name" placeholder="Project Name" />
+            <textarea className="border rounded p-2" value={(editData as any).description} onChange={e => setEditData(d => ({ ...d, description: e.target.value }))} title="Description" placeholder="Description" />
+            <input className="border rounded p-2" type="date" value={(editData as any).due_date || ""} onChange={e => setEditData(d => ({ ...d, due_date: e.target.value }))} title="Deadline" placeholder="Deadline" />
+            <select className="border rounded p-2" value={(editData as any).priority || "medium"} onChange={e => setEditData(d => ({ ...d, priority: e.target.value }))} title="Priority Level">
               <option value="low">Low</option>
               <option value="medium">Medium</option>
               <option value="high">High</option>
@@ -106,12 +106,12 @@ export default function ProjectDetailsPage() {
           </div>
         ) : project ? (
           <div className="bg-white rounded shadow p-6 flex flex-col gap-4">
-            <h2 className="text-2xl font-bold mb-2">{project.name}</h2>
-            <div className="text-gray-600">{project.description}</div>
-            <div className="text-sm">Priority: {project.priority}</div>
-            <div className="text-sm">Due: {project.due_date}</div>
+            <h2 className="text-2xl font-bold mb-2">{(project as any).name}</h2>
+            <div className="text-gray-600">{(project as any).description}</div>
+            <div className="text-sm">Priority: {(project as any).priority}</div>
+            <div className="text-sm">Due: {(project as any).due_date}</div>
             <div className="flex gap-2 mt-4">
-              {(profile?.id === project.created_by || profile?.role === "admin") && (
+              {(profile?.id === (project as any).created_by || profile?.role === "admin") && (
                 <>
                   <Button onClick={startEdit}>Edit</Button>
                   <Button variant="destructive" onClick={() => setDeleteConfirm(true)}>Delete</Button>

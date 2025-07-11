@@ -4,6 +4,7 @@ import { supabase } from "@/lib/supabase";
 import { useUser } from "@/context/UserContext";
 import { Bell, Users, UserPlus, UserMinus, UserCog } from "lucide-react";
 import { createPortal } from "react-dom";
+import Image from "next/image";
 
 export default function NotificationBell() {
   const { profile } = useUser();
@@ -122,7 +123,7 @@ export default function NotificationBell() {
             onClick={() => markAsRead(n.id)}
           >
             {n.data?.avatar_url && (
-              <img src={n.data.avatar_url} alt="avatar" className="w-8 h-8 rounded-full border-2 border-white shadow mr-2" />
+              <Image src={n.data.avatar_url} alt="avatar" width={32} height={32} className="w-8 h-8 rounded-full border-2 border-white shadow mr-2" />
             )}
             {renderNotification(n)}
             <span className="ml-auto text-xs text-gray-600 font-bold">{new Date(n.created_at).toLocaleString()}</span>

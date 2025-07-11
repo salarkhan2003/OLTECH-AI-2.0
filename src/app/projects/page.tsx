@@ -101,8 +101,12 @@ export default function ProjectsPage() {
       setPriority("medium");
       setDeadline("");
       setAssignedMembers([]);
-    } catch (err: any) {
-      setError(err.message || "Failed to create project");
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setError(err.message || "Failed to create project");
+      } else {
+        setError("Failed to create project");
+      }
     } finally {
       setCreating(false);
     }
@@ -249,8 +253,12 @@ export default function ProjectsPage() {
                     const { data, error: fetchError } = await supabase.from("projects").select().eq("group_id", profile.group_id);
                     if (!fetchError) setProjects(data || []);
                     setLoading(false);
-                  } catch (err: any) {
-                    setError(err.message || "Failed to update project");
+                  } catch (err: unknown) {
+                    if (err instanceof Error) {
+                      setError(err.message || "Failed to update project");
+                    } else {
+                      setError("Failed to update project");
+                    }
                   } finally {
                     setCreating(false);
                   }
@@ -316,8 +324,12 @@ export default function ProjectsPage() {
                       const { data, error: fetchError } = await supabase.from("projects").select().eq("group_id", profile.group_id);
                       if (!fetchError) setProjects(data || []);
                       setLoading(false);
-                    } catch (err: any) {
-                      setError(err.message || "Failed to delete project");
+                    } catch (err: unknown) {
+                      if (err instanceof Error) {
+                        setError(err.message || "Failed to delete project");
+                      } else {
+                        setError("Failed to delete project");
+                      }
                     } finally {
                       setCreating(false);
                     }

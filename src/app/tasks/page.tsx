@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { FolderKanban, UserCircle2, ChevronDown, MoreVertical, PlusCircle, CheckCircle2, BarChart3 } from "lucide-react";
 import { BackButton } from "@/components/ui/button";
+import Image from "next/image";
 
 const statusColumns = [
   { key: "todo", label: "To Do" },
@@ -317,7 +318,7 @@ export default function TasksPage() {
                             {assignee ? (
                               <>
                                 {assignee.avatar_url ? (
-                                  <img src={assignee.avatar_url} alt={assignee.name} className="w-6 h-6 rounded-full border-2 border-white shadow" />
+                                  <Image src={assignee.avatar_url} alt={assignee.name} width={24} height={24} className="w-6 h-6 rounded-full border-2 border-white shadow" />
                                 ) : (
                                   <UserCircle2 className="w-6 h-6 text-blue-500" />
                                 )}
