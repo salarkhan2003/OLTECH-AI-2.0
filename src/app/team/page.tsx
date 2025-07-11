@@ -89,31 +89,31 @@ export default function TeamPage() {
                   <Button variant="outline" onClick={() => setShowEditGroup(true)}>Edit Group Name</Button>
                 )}
                 <div className="text-xs text-gray-400 mt-2 font-bold">
-                  Group created by: {members.find((m: any) => m.id === group?.created_by)?.name || "Unknown"}
+                  Group created by: {members.find((m: unknown) => (m as any).id === group?.created_by)?.name || "Unknown"}
                 </div>
               </div>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
-              {members.map((member: any) => (
-                <div key={member.id} className="bg-white dark:bg-background rounded-2xl shadow-2xl p-4 md:p-6 flex flex-col gap-2 cursor-pointer hover:ring-2 hover:ring-blue-400 transition text-card-foreground min-w-0 w-full touch-manipulation" onClick={() => setSelected(member)}>
+              {members.map((member: unknown) => (
+                <div key={(member as any).id} className="bg-white dark:bg-background rounded-2xl shadow-2xl p-4 md:p-6 flex flex-col gap-2 cursor-pointer hover:ring-2 hover:ring-blue-400 transition text-card-foreground min-w-0 w-full touch-manipulation" onClick={() => setSelected(member)}>
                   <div className="flex items-center gap-4 mb-2">
-                    {member.avatar_url ? (
-                      <Image src={member.avatar_url} alt={member.name} width={64} height={64} className="w-16 h-16 rounded-full border-2 border-blue-200 shadow-lg" />
+                    {(member as any).avatar_url ? (
+                      <Image src={(member as any).avatar_url} alt={(member as any).name} width={64} height={64} className="w-16 h-16 rounded-full border-2 border-blue-200 shadow-lg" />
                     ) : (
                       <UserCircle2 className="w-16 h-16 text-blue-500" />
                     )}
                     <div>
-                      <div className="text-lg font-bold flex items-center gap-2">{member.name} {member.role === "admin" && <ShieldCheck className="w-5 h-5 text-green-600" title="Admin" />}</div>
-                      <div className="text-xs text-gray-500">Joined {member.created_at ? new Date(member.created_at).toLocaleDateString() : "-"}</div>
+                      <div className="text-lg font-bold flex items-center gap-2">{(member as any).name} {(member as any).role === "admin" && <ShieldCheck className="w-5 h-5 text-green-600" title="Admin" />}</div>
+                      <div className="text-xs text-gray-500">Joined {(member as any).created_at ? new Date((member as any).created_at).toLocaleDateString() : "-"}</div>
                     </div>
                   </div>
                   <div className="grid grid-cols-2 gap-2 mt-2 text-sm">
-                    <div><span className="font-semibold">Role:</span> {member.role}</div>
-                    {member.title && <div><span className="font-semibold">Title:</span> {member.title}</div>}
-                    {member.department && <div><span className="font-semibold">Department:</span> {member.department}</div>}
-                    {member.email && <div className="font-semibold break-all truncate max-w-[180px]">Email: {member.email}</div>}
-                    {member.phone && <div><span className="font-semibold">Phone:</span> {member.phone}</div>}
-                    {member.location && <div><span className="font-semibold">Location:</span> {member.location}</div>}
+                    <div><span className="font-semibold">Role:</span> {(member as any).role}</div>
+                    {(member as any).title && <div><span className="font-semibold">Title:</span> {(member as any).title}</div>}
+                    {(member as any).department && <div><span className="font-semibold">Department:</span> {(member as any).department}</div>}
+                    {(member as any).email && <div className="font-semibold break-all truncate max-w-[180px]">Email: {(member as any).email}</div>}
+                    {(member as any).phone && <div><span className="font-semibold">Phone:</span> {(member as any).phone}</div>}
+                    {(member as any).location && <div><span className="font-semibold">Location:</span> {(member as any).location}</div>}
                   </div>
                 </div>
               ))}
@@ -141,34 +141,34 @@ export default function TeamPage() {
         {selected && (
           <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
             <div className="bg-card p-6 rounded shadow w-full max-w-md flex flex-col gap-4 items-center text-card-foreground">
-              {selected.avatar_url ? (
-                <Image src={selected.avatar_url} alt={selected.name} width={80} height={80} className="w-20 h-20 rounded-full" />
+              {(selected as any).avatar_url ? (
+                <Image src={(selected as any).avatar_url} alt={(selected as any).name} width={80} height={80} className="w-20 h-20 rounded-full" />
               ) : (
                 <UserCircle2 className="w-20 h-20 text-blue-500" />
               )}
-              <div className="text-2xl font-bold flex items-center gap-2">{selected.name} {selected.role === "admin" && <ShieldCheck className="w-5 h-5 text-green-600" title="Admin" />}</div>
-              <div className="text-gray-700 text-sm">{selected.email}</div>
-              {selected.phone && <div className="text-gray-700 text-sm">Phone: {selected.phone}</div>}
-              {selected.location && <div className="text-gray-700 text-sm">Location: {selected.location}</div>}
-              {selected.title && <div className="text-gray-700 text-sm">Title: {selected.title}</div>}
-              {selected.department && <div className="text-gray-700 text-sm">Department: {selected.department}</div>}
-              {selected.bio && <div className="text-gray-700 text-sm">Bio: {selected.bio}</div>}
-              {selected.created_at && <div className="text-gray-500 text-xs">Member since: {new Date(selected.created_at).toLocaleDateString()}</div>}
-              <div className="text-xs text-gray-500 mt-2">Role: {selected.role}</div>
-              {profile?.role === "admin" && selected.id !== profile.id && (
+              <div className="text-2xl font-bold flex items-center gap-2">{(selected as any).name} {(selected as any).role === "admin" && <ShieldCheck className="w-5 h-5 text-green-600" title="Admin" />}</div>
+              <div className="text-gray-700 text-sm">{(selected as any).email}</div>
+              {(selected as any).phone && <div className="text-gray-700 text-sm">Phone: {(selected as any).phone}</div>}
+              {(selected as any).location && <div className="text-gray-700 text-sm">Location: {(selected as any).location}</div>}
+              {(selected as any).title && <div className="text-gray-700 text-sm">Title: {(selected as any).title}</div>}
+              {(selected as any).department && <div className="text-gray-700 text-sm">Department: {(selected as any).department}</div>}
+              {(selected as any).bio && <div className="text-gray-700 text-sm">Bio: {(selected as any).bio}</div>}
+              {(selected as any).created_at && <div className="text-gray-500 text-xs">Member since: {new Date((selected as any).created_at).toLocaleDateString()}</div>}
+              <div className="text-xs text-gray-500 mt-2">Role: {(selected as any).role}</div>
+              {profile?.role === "admin" && (selected as any).id !== profile.id && (
                 <div className="flex gap-2 mt-4">
                   <Button size="sm" variant="outline" disabled={actionLoading} onClick={async () => {
                     setActionLoading(true);
-                    await supabase.from("profiles").update({ role: selected.role === "admin" ? "member" : "admin" }).eq("id", selected.id);
-                    setSelected((m: any) => ({ ...m, role: m.role === "admin" ? "member" : "admin" }));
+                    await supabase.from("profiles").update({ role: (selected as any).role === "admin" ? "member" : "admin" }).eq("id", (selected as any).id);
+                    setSelected((m: unknown) => ({ ...m, role: (m as any).role === "admin" ? "member" : "admin" }));
                     // Notify team about role update
                     await sendTeamNotification(
                       profile.group_id,
                       "team_member_updated",
                       {
-                        name: selected.name,
-                        avatar_url: selected.avatar_url,
-                        action: selected.role === "admin" ? "demoted" : "promoted",
+                        name: (selected as any).name,
+                        avatar_url: (selected as any).avatar_url,
+                        action: (selected as any).role === "admin" ? "demoted" : "promoted",
                         by: profile.name,
                       },
                       profile.id
@@ -182,19 +182,19 @@ export default function TeamPage() {
               {confirmRemove && (
                 <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50">
                   <div className="bg-card rounded shadow flex flex-col gap-4 items-center text-card-foreground">
-                    <div className="text-lg font-bold">Remove {selected.name}?</div>
+                    <div className="text-lg font-bold">Remove {(selected as any).name}?</div>
                     <div className="text-sm text-gray-600">This will remove the member from the workspace.</div>
                     <div className="flex gap-2 mt-2">
                       <Button size="sm" variant="destructive" disabled={actionLoading} onClick={async () => {
                         setActionLoading(true);
-                        await supabase.from("profiles").update({ group_id: null, role: null }).eq("id", selected.id);
+                        await supabase.from("profiles").update({ group_id: null, role: null }).eq("id", (selected as any).id);
                         // Notify team about removal
                         await sendTeamNotification(
                           profile.group_id,
                           "team_member_removed",
                           {
-                            name: selected.name,
-                            avatar_url: selected.avatar_url,
+                            name: (selected as any).name,
+                            avatar_url: (selected as any).avatar_url,
                             by: profile.name,
                           },
                           profile.id
@@ -224,7 +224,7 @@ export default function TeamPage() {
                   try {
                     const { error } = await supabase.from("groups").update({ name: editGroupName }).eq("id", group.id);
                     if (error) throw error;
-                    setGroup((g: any) => ({ ...g, name: editGroupName }));
+                    setGroup((g: unknown) => ({ ...g, name: editGroupName }));
                     setShowEditGroup(false);
                   } catch (err: unknown) {
                     if (err instanceof Error) {
